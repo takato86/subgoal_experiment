@@ -1,0 +1,32 @@
+{% extends 'exp/base.html' %}
+
+{% block content %}
+    <div class='left uk-background-muted'>
+            <div class="uk-width-1-1@s uk-width-1-1@m">
+                <ul class='uk-nav uk-nav-default'>
+                    <li class="uk-nav-header">Experiment Flow</li> 
+                    <li class="uk-active"><a href="#">実験説明</a></li>
+                    <li><a href="#">タスク説明</a></li>
+                    <li><a href="#">練習タスク</a></li>
+                    <li><a href="#">本番タスク</a></li>
+                    <li><a href="#">振り返りタスク</a></li>
+                    <li class="uk-nav-divider"></li>
+                    <li><a href="#">タスク説明</a></li>
+                    <li><a href="#">練習タスク</a></li>
+                    <li><a href="#">本番タスク</a></li>
+                    <li><a href="#">振り返りタスク</a></li>
+                    <li class="uk-nav-divider"></li>
+                    <li><a href="#">実験後アンケート</a></li>
+                    <li><a href="#">実験後アンケート</a></li>
+                </ul>
+            </div>
+        </div>
+    <div class='right'>
+    <!-- TODO ユーザー情報の入力 -->
+        <h2>New User</h2>
+        <form method="POST" class="post-form"> {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="save uk-button uk-button-default"> Next </button>
+        </form>
+    </div>
+{% endblock %}
