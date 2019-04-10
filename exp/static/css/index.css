@@ -1,5 +1,5 @@
 html, body{
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 canvas{
@@ -55,7 +55,8 @@ canvas{
 }
 
 .task-block{
-    width: 50vw;
+    /* width: 50vw; */
+    height: 90vh;
     margin:0 auto;
     display:block;
 }

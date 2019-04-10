@@ -3,7 +3,15 @@ function clickStartButton(){
     startButton.style.display = 'none';
     postTaskStart(user_id, task_id, task_type_dict[0]);
     // play idを得てから処理を進める処理
-    init();
+    init_variables();
+    init_render();
+    start();
+}
+
+function setCookie(){
+    document.cookie = "user_id="+encodeURIComponent(user_id);
+    document.cookie = "task_id="+encodeURIComponent(task_id);
+    document.cookie = "task_type="+encodeURIComponent(task_type);
 }
 
 function getCookie(){

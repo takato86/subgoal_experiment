@@ -5,4 +5,5 @@ urlpatterns = [
     path('', views.render_start_page, name='render_start_page'),
     path('fourroom', views.render_fourroom, name='render_fourroom'),
     path('pinball', views.render_pinball, name='render_pinball'),
+    path('fourroom_ref', views.render_fourroom_reflection, name='render_fourroom_reflection')
 ]

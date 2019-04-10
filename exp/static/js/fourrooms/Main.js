@@ -14,28 +14,8 @@ let goal = 62;
 let n_steps = 0;
 const action_space = [0,1,2,3]; //上下左右
 
-startButton.addEventListener("click",clickStartButton);
 window.addEventListener("load", getCookie);
-
-document.onkeydown = function(e){
-    console.log(e.keyCode);
-    switch(e.keyCode){
-        case 38: 
-            step(0);
-            break;
-        case 40: 
-            step(1);
-            break;
-        case 37: 
-            step(2);
-            break;
-        case 39: 
-            step(3);
-            break;
-        default: break;
-    }
-    window.requestAnimationFrame(render);
-}
+window.addEventListener("beforeunload", setCookie);
 
 function tocell(state){
     for(let y=0; y < height; y++){
@@ -47,14 +27,19 @@ function tocell(state){
     }
 }
 
-function start(){
+function start(start_state=null){
     [cur_y, cur_x] = tocell(cur_state);
     draw_cell(cur_x, cur_y, 'white');
     [g_y, g_x] = tocell(goal);
     draw_cell(g_x, g_y, 'red');
-    do{
-        cur_state = parseInt(Math.random() * n_states);
-    }while(cur_state == goal);
+    
+    if(start_state != null){
+        cur_state = start_state;
+    }else{
+        do{
+            cur_state = parseInt(Math.random() * n_states);
+        }while(cur_state == goal);    
+    }
     pre_state = cur_state;
     n_steps = 0;
     [cur_y, cur_x] = tocell(cur_state);
@@ -84,7 +69,6 @@ function step(action){
     }
     cur_state = tostate[next_y][next_x];
     n_steps++;
-    postActionLog(play_id, cur_state, null, null, null, action, null);
 }
 
 function render(){
@@ -95,7 +79,6 @@ function render(){
     draw_cell(cur_x, cur_y, 'blue');
     console.log('y:' + cur_y + ', x:' + cur_x);
     if(cur_state == goal){
-        postTaskFinish(play_id, n_steps, true);
         window.alert("Goal! The number of steps is "+n_steps+".");
         start();
     }
@@ -109,8 +92,11 @@ function createArangeArray(num){
     return arr;
 }
 
-function init() {
-    startButton.style.display = 'none';
+// init_variables
+// init_render
+// start(start_state)
+
+function init_variables(){
     const layout = `wwwwwwwwwwwww
 w     w     w
 w     w     w
@@ -156,7 +142,9 @@ wwwwwwwwwwwww`;
     }
     const arange_state = createArangeArray(n_states);
     const init_state = arange_state.filter(n => n != goal);
-    
+}
+
+function init_render() {
     // TODO canvasの大きさからcellの大きさを指定するように変更する。
     canvas.height = 50 * height;
     canvas.width = 50 * width;
@@ -175,9 +163,6 @@ wwwwwwwwwwwww`;
     let [g_y, g_x] = tocell(goal);
     context.fillStyle = 'red';
     context.fillRect(x + g_x * cell_width, y + g_y * cell_height, cell_height, cell_width);
-    
-    start();
-
     // Initialize the GL context
     // const gl = canvas.getContext("webgl");
     // // Only continue if WebGL is available and working

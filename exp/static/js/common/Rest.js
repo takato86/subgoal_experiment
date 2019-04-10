@@ -14,7 +14,6 @@ function postTaskStart(user_id, task_id, task_type){
     request.addEventListener("load", (event)=>{
         if(event.target.status == 200){
             const json = request.response;
-            let experiment = document.getElementById('experiment');
             play_id = json.play_id
         }
         if(event.target.status != 200){
@@ -99,73 +98,42 @@ function postTaskFinish(play_id, n_steps, is_goal){
         console.log("Network Error!")
     });
     request.addEventListener("load", (event)=>{
+        console.log(event.target.status);
         if(event.target.status != 200){
             console.log(`Error: ${event.target.status}`);
+            console.log(event.target.responseText);
             return
         }
-        console.log(event.target.status);
-        console.log(event.target.responseText);
+
     });
     request.setRequestHeader('X-CSRFToken', csrftoken);
     request.setRequestHeader('Content-Type', 'application/json')
     request.send(JSON.stringify(data));
 }
 
-function getTaskIds(user_id, task_type){
+function getActionHistory(play_id){
     const request = new XMLHttpRequest();
-    const data = {
-        "user_id": user_id,
-        "task_type": task_type,
-    };
-    const parameter = '?user_id='+user_id+'&task_type='+task_type;
+    let param = "play_id="+play_id
     request.responseType = "json"
-    request.open("GET", ""+parameter);
+    request.open("GET", '/api/v1/action_history?'+param);
     request.addEventListener("error", ()=>{
         console.log("Network Error!")
     });
     request.addEventListener("load", (event)=>{
+        console.log(event.target.status);
         if(event.target.status == 200){
             const json = request.response;
-            const obj = JSON.parse(json);
-            // TODO
+            history = json.action_history;
+            // 再生開始
+            init_replay();
+            replay();
         }
         if(event.target.status != 200){
             console.log(`Error: ${event.target.status}`);
+            console.log(event.target.responseText);
             return
         }
-        console.log(event.target.status);
-        console.log(event.target.responseText);
-    });
-    request.setRequestHeader('X-CSRFToken', csrftoken);
-    request.send();
-}
-
-function getTaskHistory(task_id){
-    const request = new XMLHttpRequest();
-    const options = {
-        url: '',
-        method: 'GET',
-        json:{
-            "task_id": task_id,
-        }
-    };
-    request.responseType = "json"
-    request.open(options);
-    request.addEventListener("error", ()=>{
-        console.log("Network Error!")
-    });
-    request.addEventListener("load", (event)=>{
-        if(event.target.status == 200){
-            const json = request.response;
-            const obj = JSON.parse(json);
-            // TODO
-        }
-        if(event.target.status != 200){
-            console.log(`Error: ${event.target.status}`);
-            return
-        }
-        console.log(event.target.status);
-        console.log(event.target.responseText);
+        
     });
     request.setRequestHeader('X-CSRFToken', csrftoken);
     request.send();

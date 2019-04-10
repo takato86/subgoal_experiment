@@ -37,9 +37,6 @@ class Play(models.Model):
     end_datetime = models.DateTimeField(blank=True, null=True)
 
     def start(self, task_id=0, user_id=0, task_type="exp_play"):
-        print(Task.objects.all())
-        print(task_id)
-        print(user_id)
         task = Task.objects.get(id=task_id)
         user = User.objects.get(id=user_id)
         self.task = task
@@ -66,6 +63,9 @@ class Action(models.Model):
     intent_action = models.IntegerField()
     actual_action = models.IntegerField()
     timestamp = models.DateTimeField(default=timezone.now)
+
+    def to_dict(self):
+        return {"state1":self.state1, "state2":self.state2,"state3":self.state3,"state4":self.state4,"intent_action":self.intent_action, "actual_action":self.actual_action}
 
 class Evaluation(models.Model):
     play = models.ForeignKey('Play', on_delete=models.CASCADE)

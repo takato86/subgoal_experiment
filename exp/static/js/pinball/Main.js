@@ -1,6 +1,6 @@
 const canvas = document.querySelector("#glcanvas");
-        var context = canvas.getContext("2d");
-        const BOX_CFG=`ball 0.02
+var context = canvas.getContext("2d");
+const BOX_CFG=`ball 0.02
 target 0.9 0.2 0.04
 start 0.2 0.9
 
@@ -11,7 +11,7 @@ polygon 1.0 1.0 0.99 1.0 0.99 0.0 1.0 0.0
 
 polygon 0.45 0.45 0.55 0.45 0.55 0.55 0.45 0.55`;
 
-        const EMPTY_CFG=`ball 0.02
+const EMPTY_CFG=`ball 0.02
 target 0.9 0.2 0.04
 start 0.2 0.9
 
@@ -20,7 +20,7 @@ polygon 0.0 0.0 0.01 0.0 0.01 1.0 0.0 1.0
 polygon 0.0 1.0 0.0 0.99 1.0 0.99 1.0 1.0
 polygon 1.0 1.0 0.99 1.0 0.99 0.0 1.0 0.0`;
 
-        const HARD_CFG=`ball 0.015
+const HARD_CFG=`ball 0.015
 target 0.5 0.06 0.04
 start 0.055 0.95
 
@@ -43,7 +43,7 @@ polygon 0.61 0.014000000000000002 0.58 0.094 0.774 0.05000000000000001 0.63 0.05
 polygon 0.33399999999999996 0.014 0.27799999999999997 0.03799999999999998 0.368 0.254 0.7 0.20000000000000004 0.764 0.108 0.526 0.158
 polygon 0.294 0.584 0.478 0.626 0.482 0.574 0.324 0.434 0.35 0.39 0.572 0.52 0.588 0.722 0.456 0.668`;
 
-        const MEDIUM_CFG=`ball 0.02
+const MEDIUM_CFG=`ball 0.02
 target 0.9 0.2 0.04
 start 0.2 0.9
 
@@ -59,7 +59,7 @@ polygon 0.45 0.39199999999999996 0.614 0.25799999999999995 0.7340000000000001 0.
 polygon 0.33399999999999996 0.014 0.27799999999999997 0.03799999999999998 0.368 0.254 0.7 0.20000000000000004 0.764 0.108 0.526 0.158
 polygon 0.294 0.584 0.478 0.626 0.482 0.574 0.324 0.434 0.35 0.39 0.572 0.52 0.588 0.722 0.456 0.668 `;
 
-        const SIMPLE_CFG=`ball 0.02
+const SIMPLE_CFG=`ball 0.02
 target 0.9 0.2 0.04
 start 0.2 0.9
 
