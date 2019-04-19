@@ -1,7 +1,7 @@
 {% extends 'exp/base.html' %}
 {% load static %}
 {% block content %}
-<span id="task" data-taskid=1 data-tasktype="reha_eval"></span>
+<span id="task" data-taskid=1 data-tasktype="reha"></span>
 <div class='left uk-background-muted'>
         <div class="uk-width-1-1@s uk-width-1-1@m">
             <ul class='uk-nav uk-nav-default'>
@@ -43,13 +43,13 @@
                     </p>
                     <div class='controller'>
                         <div class="uk-margin-small">
-                            <div class="uk-button uk-button-default">
+                            <div class="uk-button uk-button-default" id="rate-highly">
                                 <!-- <img src="{% static 'img/thumbs_up.png' %}"/> -->
                                 keyboard:↑
                             </div>
                         </div>
                         <div class="uk-margin-small">
-                            <div class="uk-button uk-button-default">
+                            <div class="uk-button uk-button-default" id="rate-lower">
                                 <!-- <img src="{% static 'img/thumbs_down.png' %}"/> -->
                                 keyborad:↓
                             </div>
@@ -61,5 +61,5 @@
     </div>
 </div>
 <script src="{% static 'js/fourrooms/Main.js' %}"></script>
-<script src="{% static 'js/fourrooms/Replay.js'%}"></script>
+<script src="{% static 'js/common/Replay.js'%}"></script>
 {% endblock %}

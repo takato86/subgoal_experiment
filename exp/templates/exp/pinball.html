@@ -1,6 +1,7 @@
 {% extends 'exp/base.html' %}
 {% load static %}
 {% block content %}
+<span id="task" data-taskid=2 data-tasktype="reha"></span>
 <div class='left uk-background-muted'>
         <div class="uk-width-1-1@s uk-width-1-1@m">
             <ul class='uk-nav uk-nav-default'>
@@ -28,6 +29,7 @@
             <div class="uk-grid">
                 <div id='display'>
         <!-- TODO タスクの表示 -->
+                    <button id='startButton' class='uk-button uk-button-default'>START</button>
                     <canvas id="glcanvas" width="400" height="400">
                         このブラウザは
                         <code>&lt;canvas&gt;</code> 要素をサポートしていません。
@@ -44,4 +46,5 @@
 <script src="{% static 'js/pinball/Ball.js' %}"></script>
 <script src="{% static 'js/pinball/VectorUtils.js' %}"></script>
 <script src="{% static 'js/pinball/Main.js' %}"></script>
+<script src="{% static 'js/pinball/Play.js' %}"></script>
 {% endblock %}

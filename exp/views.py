@@ -3,8 +3,9 @@ from .forms import UserForm
 from django.utils import timezone
 from django.shortcuts import redirect
 from .utils import set_cookie
-from django.http import HttpResponseRedirect
-from .models import Play, Task, User
+from django.http import HttpResponseRedirect, HttpResponse
+from .models import Play, Task, User, Evaluation
+import csv
 
 def render_fourroom(request):
     return render(request, 'exp/fourroom.html', {})
@@ -16,8 +17,17 @@ def render_fourroom_reflection(request):
     task_id = request.COOKIES['task_id']
     user = User.objects.get(id=user_id)
     task = Task.objects.get(id=task_id)
-    play_ids = Play.objects.filter(user=user, task=task, task_type=task_type).values('id')
+    play_ids = Play.objects.filter(user=user, task=task, task_type=task_type).values('id')[:3]
     return render(request, 'exp/fourroom_ref.html', {'play_ids':play_ids})
+
+def render_pinball_reflection(request):
+    user_id = request.COOKIES['user_id']
+    task_type = request.COOKIES['task_type']
+    task_id = request.COOKIES['task_id']
+    user = User.objects.get(id=user_id)
+    task = Task.objects.get(id=task_id)
+    play_ids = Play.objects.filter(user=user, task=task, task_type=task_type).values('id')[:3]
+    return render(request, 'exp/pinball_ref.html', {'play_ids':play_ids})
 
 def render_pinball(request):
     return render(request, 'exp/pinball.html', {})
@@ -35,3 +45,11 @@ def render_start_page(request):
     else:
         form = UserForm()
     return render(request, 'exp/start.html', {'form' : form})
+
+def export_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="eval.csv"'
+    writer = csv.writer(response)
+    for evaluation in Evaluation.objects.all():
+        writer.writerow(evaluation.to_list())
+    return response

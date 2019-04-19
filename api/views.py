@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import json
 from django.http import HttpResponse
-from exp.models import Play, Action
+from exp.models import Play, Action, Evaluation
 # Create your views here.
 
 def render_json_responce(request, data, status=None):
@@ -46,8 +46,25 @@ def add_action(request):
     state4 = request_json['state4']
     actual_action = request_json['actual_action']
     intent_action = request_json['intent_action']
-    action = Action.objects.create(play=play, state1=state1,state2=state2,state3=state3,state4=state4,intent_action=intent_action, actual_action=actual_action)
+    next_state1 = request_json['next_state1']
+    next_state2 = request_json['next_state2']
+    next_state3 = request_json['next_state3']
+    next_state4 = request_json['next_state4']
+    reward = request_json['reward']
+    action = Action.objects.create(play=play, state1=state1,state2=state2,state3=state3,state4=state4,intent_action=intent_action, actual_action=actual_action, next_state1=next_state1, next_state2=next_state2, next_state3=next_state3, next_state4=next_state4, reward=reward)
     action.save()
+    data = {}
+    return render_json_responce(request, data)
+
+def add_eval(request):
+    request_json = json.loads(request.body)
+    play_id = request_json["play_id"]
+    action_id = request_json["action_id"]
+    play = Play.objects.get(id=play_id)
+    action = Action.objects.get(id=action_id)
+    eval_val = request_json["eval"]
+    evaluation = Evaluation.objects.create(play=play, action=action, evaluation=eval_val)
+    evaluation.save()
     data = {}
     return render_json_responce(request, data)
 

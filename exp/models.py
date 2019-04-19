@@ -62,22 +62,21 @@ class Action(models.Model):
     state4 = models.FloatField(null=True, blank=True)
     intent_action = models.IntegerField()
     actual_action = models.IntegerField()
+    next_state1 = models.FloatField()
+    next_state2 = models.FloatField(null=True, blank=True)
+    next_state3 = models.FloatField(null=True, blank=True)
+    next_state4 = models.FloatField(null=True, blank=True)
+    reward = models.IntegerField()
     timestamp = models.DateTimeField(default=timezone.now)
 
     def to_dict(self):
-        return {"state1":self.state1, "state2":self.state2,"state3":self.state3,"state4":self.state4,"intent_action":self.intent_action, "actual_action":self.actual_action}
+        return {"id": self.id, "state1":self.state1, "state2":self.state2,"state3":self.state3,"state4":self.state4,"intent_action":self.intent_action, "actual_action":self.actual_action}
 
 class Evaluation(models.Model):
     play = models.ForeignKey('Play', on_delete=models.CASCADE)
-    state1 = models.FloatField()
-    state2 = models.FloatField()
-    state3 = models.FloatField()
-    state4 = models.FloatField()
-    action = models.IntegerField()
+    action = models.ForeignKey('Action', on_delete=models.CASCADE)
     evaluation = models.IntegerField()
     timestamp = models.DateTimeField(default=timezone.now)
-
-
-
-
-
+    
+    def to_list(self):
+        return [self.id, self.play.id, self.play.user.id, self.play.task.title, self.action.state1, self.action.state2, self.action.state3, self.action.state4, self.action.intent_action, self.action.actual_action, self.action.next_state1, self.action.next_state2, self.action.next_state3, self.action.next_state4, self.timestamp]

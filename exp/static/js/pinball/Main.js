@@ -99,8 +99,7 @@ let ball;
 let counter = 0;
 let current_act = 4;
 let user_action = '';
-
-window.onload = start();
+let reward = 0;
 
 document.body.addEventListener('keydown', e => {
     user_action = e.key;
@@ -110,10 +109,16 @@ document.body.addEventListener('keyup', e=>{
     user_action = '';
 });
 
+window.addEventListener("load", getCookie);
+window.addEventListener("beforeunload", setCookie);
+
 function step(action = 4){
     counter++;
     //TODO Random move
-    let reward = take_action(action);
+    pre_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
+    reward = take_action(action);
+    cur_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
+    n_steps ++;
     if(terminal()){
         ball.pos_x = start_pos_x;
         ball.pos_y = start_pos_y;
@@ -123,6 +128,7 @@ function step(action = 4){
     }
     return true;
 }
+
 function terminal(){
     if(counter >= episodeCap || episode_ended()){
         counter = 0;
@@ -130,6 +136,7 @@ function terminal(){
     }
     return false;
 }
+
 function take_action(action){
     for(let i=0; i<20; i++){
         if(i == 0){
@@ -192,8 +199,16 @@ function check_bounds(){
     }
 }
 
+function init_variables(){
+    return
+}
+
 function start(){
+    console.log(user_id);
+    console.log(task_type);
+    console.log(task_id);
     const cnt = 2;
+    n_steps = 0;
     let x_vertexes = [];
     let y_vertexes = [];
     for(cf of cfgs_array){
@@ -237,6 +252,8 @@ function start(){
     ball = new Ball(start_pos_x, start_pos_y, ball_rad);
     ball.xdot = 0;
     ball.ydot = 0;
+    pre_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
+    cur_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
     render();
 }
 
@@ -260,6 +277,10 @@ function draw_obs(pos_xs, pos_ys){
     context.fill();
 }
 
+function init_render(){
+    return
+}
+
 function render(){
     context.clearRect(0, 0, screen_width, screen_height);
     for(obs of obstacles){
@@ -268,21 +289,3 @@ function render(){
     draw_circle(ball.pos_x, ball.pos_y, ball_rad, 'blue');
     draw_circle(target_pos_x, target_pos_y, target_rad, 'red');
 }
-
-(function loop(){
-    current_act = 4; //Math.floor(Math.random() * 5);
-    switch(user_action){
-        case 'ArrowUp': current_act = 1; break;
-        case 'ArrowDown': current_act = 3; break;
-        case 'ArrowRight': current_act = 0; break;
-        case 'ArrowLeft': current_act = 2; break;
-        default: current_act = 4; break;
-    }
-    if(!step(current_act)){
-        alert("game end");
-        return;
-    }
-    console.log(ball.pos_x + " : "+ ball.pos_y);
-    render();
-    requestAnimationFrame(loop);
-}());

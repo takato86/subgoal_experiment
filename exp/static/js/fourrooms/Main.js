@@ -7,15 +7,17 @@ let height = 0;
 let width = 0;
 const cell_width = 50;
 const cell_height = 50;
-let pre_state = 0;
-let cur_state = 0;
 let n_states = 0;
 let goal = 62;
-let n_steps = 0;
+let reward = 0;
 const action_space = [0,1,2,3]; //上下左右
+// const init_state;
 
 window.addEventListener("load", getCookie);
 window.addEventListener("beforeunload", setCookie);
+
+// TODO Rewardの設定
+// 失敗の確率．
 
 function tocell(state){
     for(let y=0; y < height; y++){
@@ -37,7 +39,7 @@ function start(start_state=null){
         cur_state = start_state;
     }else{
         do{
-            cur_state = parseInt(Math.random() * n_states);
+            cur_state = Math.floor(Math.random() * n_states);
         }while(cur_state == goal);    
     }
     pre_state = cur_state;
@@ -84,13 +86,13 @@ function render(){
     }
 }
 
-function createArangeArray(num){
-    arr = []
-    for(let i=0; i<num; i++){
-        arr[i] = i;
-    }
-    return arr;
-}
+// function createArangeArray(num){
+//     arr = [];
+//     for(let i=0; i<num; i++){
+//         arr[i] = i;
+//     }
+//     return arr;
+// }
 
 // init_variables
 // init_render
@@ -112,6 +114,7 @@ w     w     w
 wwwwwwwwwwwww`;
     let splited_layout = layout.split('\n');
     let cells = Array.from(splited_layout);
+    occupancy = [];
     for(cell of cells){
         splited_cell = cell.split('');
         res_cell = splited_cell.map((str) => {
@@ -140,12 +143,15 @@ wwwwwwwwwwwww`;
             }
         }
     }
-    const arange_state = createArangeArray(n_states);
-    const init_state = arange_state.filter(n => n != goal);
+    pre_state = 0;
+    cur_state = 0;
+    // const arange_state = createArangeArray(n_states);
+    // const init_state = arange_state.filter(n => n != goal);
 }
 
 function init_render() {
     // TODO canvasの大きさからcellの大きさを指定するように変更する。
+    context.clearRect(0, 0, canvas.width, canvas.height);
     canvas.height = 50 * height;
     canvas.width = 50 * width;
     let x = 0;
