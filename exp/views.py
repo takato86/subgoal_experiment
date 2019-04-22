@@ -50,6 +50,8 @@ def export_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="eval.csv"'
     writer = csv.writer(response)
+    csv_header = ["eval_id", "play_id", "user_id", "task_name", "state1", "state2", "state3", "state4", "intent_action", "actual_action", "next_state1", "next_state2", "next_state3", "next_state4", "timestamp"]
+    writer.writerow(csv_header)
     for evaluation in Evaluation.objects.all():
         writer.writerow(evaluation.to_list())
     return response
