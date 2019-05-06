@@ -11,6 +11,8 @@ let n_states = 0;
 let goal = 62;
 let reward = 0;
 const action_space = [0,1,2,3]; //上下左右
+const possible_next_goals = [68, 69, 70, 71, 72, 78, 79, 80, 81, 82, 88, 89, 90, 91, 92, 93, 99, 100, 101, 102, 103];
+const goal_change_freq = 1;
 // const init_state;
 
 window.addEventListener("load", getCookie);
@@ -32,16 +34,19 @@ function tocell(state){
 function start(start_state=null){
     [cur_y, cur_x] = tocell(cur_state);
     draw_cell(cur_x, cur_y, 'white');
-    [g_y, g_x] = tocell(goal);
-    draw_cell(g_x, g_y, 'red');
-    
+
     if(start_state != null){
         cur_state = start_state;
     }else{
+        let g_index = Math.floor(Math.random() * possible_next_goals.length);
+        goal = possible_next_goals[g_index];
         do{
             cur_state = Math.floor(Math.random() * n_states);
         }while(cur_state == goal);    
     }
+    [g_y, g_x] = tocell(goal);
+    draw_cell(g_x, g_y, 'red');
+    
     pre_state = cur_state;
     n_steps = 0;
     [cur_y, cur_x] = tocell(cur_state);
@@ -74,29 +79,18 @@ function step(action){
 }
 
 function render(){
-    [pre_y,pre_x] = tocell(pre_state);
-    console.log('y:' + pre_y + ', x:' + pre_x);
-    draw_cell(pre_x, pre_y, 'white');
-    [cur_y, cur_x] = tocell(cur_state);
-    draw_cell(cur_x, cur_y, 'blue');
-    console.log('y:' + cur_y + ', x:' + cur_x);
-    if(cur_state == goal){
+    if(cur_state != goal){
+        [pre_y,pre_x] = tocell(pre_state);
+        console.log('y:' + pre_y + ', x:' + pre_x);
+        draw_cell(pre_x, pre_y, 'white');
+        [cur_y, cur_x] = tocell(cur_state);
+        draw_cell(cur_x, cur_y, 'blue');
+        console.log('y:' + cur_y + ', x:' + cur_x);
+    }else{
         window.alert("Goal! The number of steps is "+n_steps+".");
-        start();
+        // start();
     }
 }
-
-// function createArangeArray(num){
-//     arr = [];
-//     for(let i=0; i<num; i++){
-//         arr[i] = i;
-//     }
-//     return arr;
-// }
-
-// init_variables
-// init_render
-// start(start_state)
 
 function init_variables(){
     const layout = `wwwwwwwwwwwww
@@ -166,9 +160,9 @@ function init_render() {
             context.fillRect(x + j * cell_width, y + i * cell_height, cell_width, cell_height);
         }
     }
-    let [g_y, g_x] = tocell(goal);
-    context.fillStyle = 'red';
-    context.fillRect(x + g_x * cell_width, y + g_y * cell_height, cell_height, cell_width);
+    // let [g_y, g_x] = tocell(goal);
+    // context.fillStyle = 'red';
+    // context.fillRect(x + g_x * cell_width, y + g_y * cell_height, cell_height, cell_width);
     // Initialize the GL context
     // const gl = canvas.getContext("webgl");
     // // Only continue if WebGL is available and working

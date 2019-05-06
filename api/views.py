@@ -20,9 +20,10 @@ def play_start(request):
     request_json = json.loads(request.body)
     user_id = request_json['user_id']
     task_id = request_json['task_id']
+    goal = request_json['goal']
     task_type = request_json['task_type']
     play = Play()
-    play_id = play.start(task_id, user_id, task_type)
+    play_id = play.start(task_id, user_id, goal, task_type)
     data = {'play_id':play_id}
     return render_json_responce(request, data)
 
@@ -77,5 +78,5 @@ def get_action_history(request):
     
     for action in Action.objects.filter(play=play):
         action_history.append(action.to_dict())
-    data = {'action_history' : action_history}
+    data = {'action_history' : action_history, 'goal':play.goal}
     return render_json_responce(request, data)

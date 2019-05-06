@@ -1,9 +1,10 @@
-function postTaskStart(user_id, task_id, task_type, callback){
+function postTaskStart(user_id, task_id, goal_state, task_type, callback){
     // Returns: play_id
     const request = new XMLHttpRequest();
     let data = {
         "user_id": user_id,
         "task_id": task_id,
+        "goal": goal_state,
         "task_type": task_type,
     };
     request.responseType = "json"
@@ -126,6 +127,7 @@ function getActionHistory(given_play_id){
         if(event.target.status == 200){
             const json = request.response;
             history = json.action_history;
+            goal = json.goal;
             // 再生開始
             init_replay();
             if(task_id==1){

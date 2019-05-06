@@ -21,7 +21,7 @@ let loop = function(){
 function clickStartButton(){
     let startButton = document.getElementById('startButton');
     startButton.style.display = 'none';
-    postTaskStart(user_id, task_id, task_type, loop);
+    postTaskStart(user_id, task_id, goal, task_type, loop);
     // play idを得てから処理を進める処理
     init_variables();
     init_render();

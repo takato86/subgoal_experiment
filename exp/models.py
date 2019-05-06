@@ -31,16 +31,18 @@ class Play(models.Model):
     task = models.ForeignKey('Task', on_delete=models.CASCADE)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     n_steps = models.IntegerField(null=True, blank=True)
+    goal = models.IntegerField()
     is_goal = models.BooleanField()
     task_type = models.CharField(max_length=100)
     start_datetime = models.DateTimeField(default=timezone.now)
     end_datetime = models.DateTimeField(blank=True, null=True)
 
-    def start(self, task_id=0, user_id=0, task_type="exp_play"):
+    def start(self, task_id:int , user_id:int , goal:int , task_type: str="exp_play"):
         task = Task.objects.get(id=task_id)
         user = User.objects.get(id=user_id)
         self.task = task
         self.user = user
+        self.goal = goal
         self.task_type = task_type
         self.is_goal = False
         self.n_steps = 0
