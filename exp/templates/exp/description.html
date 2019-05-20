@@ -1,0 +1,21 @@
+{% extends 'exp/base.html' %}
+{% load static %}
+{% block content %}
+<h2><span class="uk-text-background"></span></h2>
+<div class="uk-section uk-section-default">
+    <div class="uk-container">
+        <h3>実験説明</h3>
+        <div class="uk-grid-match uk-child-width-1-2@m" ukgrid>
+            <div>
+                <p>本実験は人（参加者）が設定するサブゴールを取得する実験です．ここでサブゴールとは，ある問題を解くためのキーポイントとなる状態のことを指します．例えば，＜例＞．</p>
+            </div>
+            <div>
+                <p>実験の流れは，はじめに迷路タスクを解いていただきます．その後，参加者の解き方をリプレイするので，そのリプレイを見てサブゴールを選択していただきます．</p>
+            </div>
+        </div>
+    </div>
+    <div class="uk-container">  
+            <a class='uk-button uk-button-default' href="{% url 'play_fourroom_description' %}">次へ</a>
+    </div>
+</div>
+{% endblock %}

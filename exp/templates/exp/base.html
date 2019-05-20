@@ -13,8 +13,28 @@
             <h1>Subgoal Transfer Experiments</h1>
         </header>
         <main>
-            {% block content %}
-            {% endblock %}
+            <div class='left uk-background-muted'>
+                {% block sidebar %}
+                    <div class="uk-width-1-1@s uk-width-1-1@m">
+                        <h5>実験の流れ</h5>
+                        <ul class='uk-list uk-list-large'>
+                            <li>実験説明</li> 
+                            <!-- <li><span class="uk-text-background">迷路タスク</span></li> -->
+                            <!-- class="uk-active"  -->
+                            <li>タスク説明</li>
+                            <li>タスク</li>
+                            <li>振り返りタスク説明</li>
+                            <li>振り返りタスク</li>
+                            <li>実験後アンケート</li>
+                        </ul>
+                    </div>
+                {% endblock %}
+            </div>
+            <div class='right'>
+                {% block content %}
+                {% endblock %}
+            </div>    
+            
         </main>
         <footer id='foot' class='uk-background-secondary uk-light uk-padding'>
             <div>Ymd-lab Takato Okudo</div>

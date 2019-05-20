@@ -1,0 +1,18 @@
+{% extends 'exp/base.html' %}
+{% load static %}
+{% block content %}
+<h2><span class="uk-text-background"></span></h2>
+<div class="uk-section uk-section-default">
+    <div class="uk-container">
+        <h3>迷路タスク説明</h3>
+        <div class="uk-grid-match uk-child-width-1-1@m" ukgrid>
+            <div>
+                <p>本タスクはスタートから最短でゴールに到達するタスクです．参加者が操作するプレイヤーが青いセル，ゴールが赤いセルで示されます．プレイヤーをできるだけ少ない操作でゴールへ到達してください．プレイヤーはキーボードの上下左右で操作ができます．</p>
+            </div>
+        </div>
+    </div>
+    <div class="uk-container">
+            <a class='uk-button uk-button-default' href="{% url 'fourroom' %}">次へ</a>
+    </div>
+</div>
+{% endblock %}

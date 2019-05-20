@@ -17,7 +17,7 @@ function clickStartButton(){
 function endTask(){
     n_runs--;
     if(n_runs < 1){
-        window.location.href = './fourroom_ref'
+        window.location.href = './reflection/description'
     }
     postTaskFinish(play_id, n_steps, true);
     let startButton = document.getElementById('startButton');

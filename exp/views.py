@@ -7,8 +7,17 @@ from django.http import HttpResponseRedirect, HttpResponse
 from .models import Play, Task, User, Evaluation
 import csv
 
+def render_description(request):
+    return render(request, 'exp/description.html', {})
+
+def render_play_description(request):
+    return render(request, 'exp/tasks/fourrooms/play_description.html', {})
+
+def render_reflection_description(request):
+    return render(request, 'exp/tasks/fourrooms/ref_description.html', {})
+
 def render_fourroom(request):
-    return render(request, 'exp/fourroom.html', {})
+    return render(request, 'exp/tasks/fourrooms/fourroom.html', {})
 
 def render_fourroom_reflection(request):
     # user_idとtask_type，taskが必要←requestに含まれる必要．
@@ -18,7 +27,7 @@ def render_fourroom_reflection(request):
     user = User.objects.get(id=user_id)
     task = Task.objects.get(id=task_id)
     play_ids = Play.objects.filter(user=user, task=task, task_type=task_type).values('id')
-    return render(request, 'exp/fourroom_ref.html', {'play_ids':play_ids})
+    return render(request, 'exp/tasks/fourrooms/fourroom_ref.html', {'play_ids':play_ids})
 
 def render_pinball_reflection(request):
     user_id = request.COOKIES['user_id']
@@ -27,10 +36,10 @@ def render_pinball_reflection(request):
     user = User.objects.get(id=user_id)
     task = Task.objects.get(id=task_id)
     play_ids = Play.objects.filter(user=user, task=task, task_type=task_type).values('id')[:3]
-    return render(request, 'exp/pinball_ref.html', {'play_ids':play_ids})
+    return render(request, 'exp/tasks/pinball/pinball_ref.html', {'play_ids':play_ids})
 
 def render_pinball(request):
-    return render(request, 'exp/pinball.html', {})
+    return render(request, 'exp/tasks/pinball/pinball.html', {})
 
 def render_start_page(request):
     if request.method == "POST":
@@ -39,7 +48,7 @@ def render_start_page(request):
             post = form.save(commit=False)
             post.created_datetime = timezone.now()
             post.save()
-            response = HttpResponseRedirect('./fourroom')
+            response = HttpResponseRedirect('./exp/description')
             set_cookie(response, 'user_id', post.id, 365*24*60*60)
             return response
     else:
