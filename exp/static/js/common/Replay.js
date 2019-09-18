@@ -42,7 +42,7 @@ function init_play_buttons(){
 function init_replay(){
     // リプレイの初期化
     init_variables(); // Mainの中でそれぞれ定義
-    start_state = restore_state(history[0]);
+    start_state = restore_state(Player.history[0]);
     init_render(); //Mainの中でそれぞれ定義
     start(start_state);
 }
@@ -53,15 +53,15 @@ function replay(interval=1000){
     let log;
     clearInterval(repeat)
     repeat = setInterval(function(){
-        if(counter >= history.length){
+        if(counter >= Player.history.length){
             clearInterval(repeat);
             window.alert("Replay ended.")
             return;
         }
-        log = history[counter];
+        log = Player.history[counter];
         action_id = log["id"];
         step(parseInt(log["actual_action"]));
-        render();
+        render_with_trajectory();
         counter++;
     }, interval);
 }

@@ -1,7 +1,12 @@
+Env.task_info = document.getElementById("task")
+Env.task_id = parseInt(Env.task_info.dataset.taskid);
+Env.user_id = -1;
+Env.task_type = Env.task_info.dataset.tasktype;
+
 function setCookie(){
-    document.cookie = "user_id="+encodeURIComponent(user_id);
-    document.cookie = "task_id="+encodeURIComponent(task_id);
-    document.cookie = "task_type="+encodeURIComponent(task_type);
+    document.cookie = "Env.user_id="+encodeURIComponent(Env.user_id);
+    document.cookie = "Env.task_id="+encodeURIComponent(Env.task_id);
+    document.cookie = "Env.task_type="+encodeURIComponent(Env.task_type);
 }
 
 function getCookie(){
@@ -10,13 +15,13 @@ function getCookie(){
         value = value.trim()
         var content = value.split('=');
         switch(content[0]){
-            case 'user_id':user_id = parseInt(content[1]); break;
+            case 'user_id':Env.user_id = parseInt(content[1]); break;
             case 'task_id':
-                if(task_id == -1){
-                    task_id = parseInt(content[1]); break;
+                if(Env.task_id == -1){
+                    Env.task_id = parseInt(content[1]); break;
                 }break;
-            case 'task_type': task_type = content[1]; break;
-            case 'csrftoken': csrftoken = content[1]; break;
+            case 'task_type': Env.task_type = content[1]; break;
+            case 'csrftoken': Env.csrftoken = content[1]; break;
             default: console.log(content[0]+' : '+content[1]);
         }
     })

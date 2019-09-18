@@ -10,7 +10,7 @@ function clickStartButton(){
     init_variables();
     init_render();
     start();
-    postTaskStart(user_id, task_id, goal, task_type, alternative);
+    postTaskStart(goal, alternative);
     counterText.textContent = String(n_runs);
 }
 
@@ -19,7 +19,7 @@ function endTask(){
     if(n_runs < 1){
         window.location.href = './reflection/description'
     }
-    postTaskFinish(play_id, n_steps, true);
+    postTaskFinish(play_id, Player.steps, true);
     let startButton = document.getElementById('startButton');
     startButton.style.display = 'block';
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -44,15 +44,15 @@ document.onkeydown = function(e){
             break;
         default: break;
     }
-    window.requestAnimationFrame(render);
+    window.requestAnimationFrame(render_with_trajectory);
 }
 
 function play_step(action){
     step(action);
-    pre_states = arange_state(pre_state);
-    cur_states = arange_state(cur_state)
-    postActionLog(play_id, pre_states[0], pre_states[1], pre_states[2], pre_states[3], action, null, cur_states[0], cur_states[1], cur_states[2], cur_states[3], reward);
-    if(cur_state == goal){
+    Player.pre_states = arange_state(Player.pre_state);
+    Player.cur_states = arange_state(Player.cur_state);
+    postActionLog(play_id, Player.pre_states[0], Player.pre_states[1], Player.pre_states[2], Player.pre_states[3], action, null, Player.cur_states[0], Player.cur_states[1], Player.cur_states[2], Player.cur_states[3], Env.reward);
+    if(Player.cur_state == goal){
         endTask();
     }
 }

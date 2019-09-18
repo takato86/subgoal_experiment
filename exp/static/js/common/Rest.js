@@ -1,11 +1,16 @@
-function postTaskStart(user_id, task_id, goal_state, task_type, callback){
+Env.task_info = document.getElementById("task")
+Env.task_id = parseInt(Env.task_info.dataset.taskid);
+Env.user_id = -1;
+Env.task_type = Env.task_info.dataset.tasktype;
+
+function postTaskStart(goal_state, callback){
     // Returns: play_id
     const request = new XMLHttpRequest();
     let data = {
-        "user_id": user_id,
-        "task_id": task_id,
+        "user_id": Env.user_id,
+        "task_id": Env.task_id,
         "goal": goal_state,
-        "task_type": task_type,
+        "task_type": Env.task_type,
     };
     request.responseType = "json"
     request.open('POST', '/api/v1/plays/start');
@@ -26,7 +31,7 @@ function postTaskStart(user_id, task_id, goal_state, task_type, callback){
         console.log(event.target.responseType);
         console.log(event.target.text);
     });
-    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(JSON.stringify(data));
 }
@@ -60,7 +65,7 @@ function postActionLog(play_id, state1, state2, state3, state4, actual_action, i
             return
         }
     });
-    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(JSON.stringify(data));
 }
@@ -84,7 +89,7 @@ function postEvalLog(play_id, action_id, eval){
         console.log(event.target.status);
         console.log(event.target.responseText);
     });
-    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
     request.setRequestHeader("Content-Type", "application/json")
     request.send(JSON.stringify(data));
 }
@@ -109,7 +114,7 @@ function postTaskFinish(play_id, n_steps, is_goal){
         }
 
     });
-    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
     request.setRequestHeader('Content-Type', 'application/json')
     request.send(JSON.stringify(data));
 }
@@ -118,7 +123,7 @@ function getActionHistory(given_play_id){
     const request = new XMLHttpRequest();
     let param = "play_id="+given_play_id
     request.responseType = "json"
-    request.open("GET", '/api/v1/action_history?'+param);
+    request.open("GET", '/api/v1/action_Player.history?'+param);
     request.addEventListener("error", ()=>{
         console.log("Network Error!")
     });
@@ -126,14 +131,14 @@ function getActionHistory(given_play_id){
         console.log(event.target.status);
         if(event.target.status == 200){
             const json = request.response;
-            history = json.action_history;
+            Player.history = json.action_Player.history;
             goal = json.goal;
             // 再生開始
             init_replay();
-            if(task_id==1){
+            if(Env.task_id==1){
                 replay(1000);
             }
-            if(task_id==2){
+            if(Env.task_id==2){
                 replay(50);
             }
             
@@ -145,6 +150,6 @@ function getActionHistory(given_play_id){
         }
         
     });
-    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
     request.send();
 }
