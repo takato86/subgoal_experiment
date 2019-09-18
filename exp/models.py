@@ -28,7 +28,8 @@ class Task(models.Model):
         return self.title
 
 class Play(models.Model):
-    task = models.ForeignKey('Task', on_delete=models.CASCADE)
+    # task = models.ForeignKey('Task', on_delete=models.CASCADE)
+    task = models.IntegerField(null=False, blank=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     n_steps = models.IntegerField(null=True, blank=True)
     goal = models.IntegerField()
@@ -38,9 +39,8 @@ class Play(models.Model):
     end_datetime = models.DateTimeField(blank=True, null=True)
 
     def start(self, task_id:int , user_id:int , goal:int , task_type: str="exp_play"):
-        task = Task.objects.get(id=task_id)
         user = User.objects.get(id=user_id)
-        self.task = task
+        self.task = task_id
         self.user = user
         self.goal = goal
         self.task_type = task_type
@@ -81,4 +81,4 @@ class Evaluation(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     
     def to_list(self):
-        return [self.id, self.play.id, self.play.user.id, self.play.task.title, self.action.state1, self.action.state2, self.action.state3, self.action.state4, self.action.intent_action, self.action.actual_action, self.action.next_state1, self.action.next_state2, self.action.next_state3, self.action.next_state4, self.timestamp]
+        return [self.id, self.play.id, self.play.user.id, self.play.task, self.action.state1, self.action.state2, self.action.state3, self.action.state4, self.action.intent_action, self.action.actual_action, self.action.next_state1, self.action.next_state2, self.action.next_state3, self.action.next_state4, self.timestamp]

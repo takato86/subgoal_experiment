@@ -8,7 +8,8 @@ let width = 0;
 const cell_width = 50;
 const cell_height = 50;
 let n_states = 0;
-let goal = 62;
+Env.start = null;
+Env.goal = 62;
 Env.reward = 0;
 Player.action_space = [0,1,2,3]; //上下左右
 const possible_next_goals = [68, 69, 70, 71, 72, 78, 79, 80, 81, 82, 88, 89, 90, 91, 92, 93, 99, 100, 101, 102, 103];
@@ -36,15 +37,17 @@ function start(start_state=null){
     draw_cell_with_border(cur_x, cur_y, 'white');
 
     if(start_state != null){
+        Env.start = start_state;
         Player.cur_state = start_state;
     }else{
         let g_index = Math.floor(Math.random() * possible_next_goals.length);
-        goal = possible_next_goals[g_index];
+        Env.goal = possible_next_goals[g_index];
         do{
-            Player.cur_state = Math.floor(Math.random() * n_states);
-        }while(Player.cur_state == goal);    
+             Env.start = Math.floor(Math.random() * n_states);
+             Player.cur_state = Env.start;
+        }while(Player.cur_state == Env.goal);    
     }
-    [g_y, g_x] = tocell(goal);
+    [g_y, g_x] = tocell(Env.goal);
     draw_cell_with_border(g_x, g_y, 'darkorange');
     
     Player.pre_state = Player.cur_state;
@@ -82,8 +85,8 @@ function draw_text_in_cell(pos_x, pos_y, text){
     context.fillText(text, pos_x*cell_width + cell_width / 2, pos_y*cell_height + cell_height/2 );
 }
 
-function get_act_direct(){
-    switch(Player.pre_action){
+function get_act_direct(action){
+    switch(action){
         case 0: return "↑";
         case 1: return "↓";
         case 2: return "←";
@@ -114,7 +117,7 @@ function step(action){
 
 function render(){
     // 軌跡の色塗りなし。
-    if(Player.cur_state != goal){
+    if(Player.cur_state != Env.goal){
         [pre_y,pre_x] = tocell(Player.pre_state);
         console.log('y:' + pre_y + ', x:' + pre_x);
         draw_cell_with_border(pre_x, pre_y, 'white');
@@ -128,7 +131,7 @@ function render(){
 }
 
 function render_with_trajectory(){
-    if(Player.cur_state != goal){
+    if(Player.cur_state != Env.goal){
         [pre_y,pre_x] = tocell(Player.pre_state);
         console.log('y:' + pre_y + ', x:' + pre_x);
         const direction = get_act_direct(Player.pre_action);
@@ -214,13 +217,23 @@ function init_render() {
     }
 }
 
-
 function render_trajectory(){
+    let log, cell, state, actual_action, direction;
     if(Player.history.length > 0){
-        init_render()
-        // TODO Trajectoryの描画とStartとGoalの描画。
-        // foreach(let step of history){
-            // TODO 
-        // }
+        init_render();
+        for(let i=0; i < Player.history.length; i++){
+            log = Player.history[i];
+            state = log["state1"];
+            actual_action = log["actual_action"];
+            cell = tocell(state);
+            direction = get_act_direct(parseInt(actual_action));
+            draw_cell_with_border_and_text(cell[1], cell[0], "lightgray", direction);
+        }
+        cell = tocell(Env.start)
+        draw_cell_with_border_and_text(cell[1], cell[0], "royalblue", "S");
+        cell = tocell(Env.goal)
+        draw_cell_with_border_and_text(cell[1], cell[0], "darkorange", "G");
+    }else{
+        console.log("History is null.");
     }
 }

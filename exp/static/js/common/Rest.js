@@ -20,7 +20,7 @@ function postTaskStart(goal_state, callback){
     request.addEventListener("load", (event)=>{
         if(event.target.status == 200){
             const json = request.response;
-            play_id = json.play_id
+            Env.play_id = json.play_id
             callback()
         }
         if(event.target.status != 200){
@@ -132,7 +132,7 @@ function getActionHistory(given_play_id){
         if(event.target.status == 200){
             const json = request.response;
             Player.history = json.action_history;
-            goal = json.goal;
+            Env.goal = json.goal;
             // 再生開始
             init_replay();
             if(Env.task_id==1){

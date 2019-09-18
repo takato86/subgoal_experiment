@@ -26,11 +26,3 @@ function getCookie(){
         }
     })
 }
-
-function rateHighly(){
-    postEvalLog(play_id, action_id, 1);
-}
-
-function rateLower(){
-    postEvalLog(play_id, action_id, -1);
-}

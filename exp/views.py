@@ -25,7 +25,7 @@ def render_fourroom_reflection(request):
     task_type = request.COOKIES['task_type']
     task_id = request.COOKIES['task_id']
     user = User.objects.get(id=user_id)
-    task = Task.objects.get(id=task_id)
+    task = task_id
     play_ids = Play.objects.filter(user=user, task=task, task_type=task_type).values('id')
     return render(request, 'exp/tasks/fourrooms/fourroom_ref.html', {'play_ids':play_ids})
 
@@ -34,7 +34,7 @@ def render_pinball_reflection(request):
     task_type = request.COOKIES['task_type']
     task_id = request.COOKIES['task_id']
     user = User.objects.get(id=user_id)
-    task = Task.objects.get(id=task_id)
+    task = task_id
     play_ids = Play.objects.filter(user=user, task=task, task_type=task_type).values('id')[:3]
     return render(request, 'exp/tasks/pinball/pinball_ref.html', {'play_ids':play_ids})
 
