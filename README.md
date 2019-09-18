@@ -1,7 +1,7 @@
 起動
 ```
 python manage.py runserver
-```bash
+```
 
 データベースの初期化
 ```
