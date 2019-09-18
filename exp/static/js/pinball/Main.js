@@ -117,7 +117,7 @@ function step(action = 4){
     Player.pre_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
     Env.reward = take_action(action);
     Player.cur_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
-    Player.steps ++;
+    Player.n_steps ++;
     if(terminal()){
         ball.pos_x = start_pos_x;
         ball.pos_y = start_pos_y;
@@ -204,7 +204,7 @@ function init_variables(){
 
 function start(){
     const cnt = 2;
-    Player.steps = 0;
+    Player.n_steps = 0;
     let x_vertexes = [];
     let y_vertexes = [];
     for(cf of cfgs_array){

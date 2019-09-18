@@ -19,7 +19,7 @@ function endTask(){
     if(n_runs < 1){
         window.location.href = './reflection/description'
     }
-    postTaskFinish(play_id, Player.steps, true);
+    postTaskFinish(play_id, Player.n_steps, true);
     let startButton = document.getElementById('startButton');
     startButton.style.display = 'block';
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -53,6 +53,7 @@ function play_step(action){
     Player.cur_states = arange_state(Player.cur_state);
     postActionLog(play_id, Player.pre_states[0], Player.pre_states[1], Player.pre_states[2], Player.pre_states[3], action, null, Player.cur_states[0], Player.cur_states[1], Player.cur_states[2], Player.cur_states[3], Env.reward);
     if(Player.cur_state == goal){
+        Player.pre_action = -1
         endTask();
     }
 }

@@ -48,7 +48,8 @@ function start(start_state=null){
     draw_cell_with_border(g_x, g_y, 'darkorange');
     
     Player.pre_state = Player.cur_state;
-    Player.steps = 0;
+    Player.n_steps = 0;
+    Player.pre_action = -1;
     [cur_y, cur_x] = tocell(Player.cur_state);
     draw_cell_with_border(cur_x, cur_y, 'royalblue');
 }
@@ -68,8 +69,32 @@ function draw_cell_with_border(pos_x, pos_y, color){
     context.strokeRect(pos_x * cell_width, pos_y * cell_height, cell_width, cell_height);
 }
 
+function draw_cell_with_border_and_text(pos_x, pos_y, color, text){
+    draw_cell_with_border(pos_x, pos_y, color);
+    draw_text_in_cell(pos_x, pos_y, text);
+}
+
+function draw_text_in_cell(pos_x, pos_y, text){
+    context.fillStyle='black';
+    context.font = '40px Arial';
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillText(text, pos_x*cell_width + cell_width / 2, pos_y*cell_height + cell_height/2 );
+}
+
+function get_act_direct(){
+    switch(Player.pre_action){
+        case 0: return "↑";
+        case 1: return "↓";
+        case 2: return "←";
+        case 3: return "→";
+        default: return " ";
+    }
+}
+
 function step(action){
     Player.pre_state = Player.cur_state;
+    Player.pre_action = action;
     [cur_y, cur_x] = tocell(Player.cur_state);
     [next_y, next_x] = [cur_y, cur_x];
     switch(action){
@@ -84,7 +109,7 @@ function step(action){
         next_x = cur_x;
     }
     Player.cur_state = tostate[next_y][next_x];
-    Player.steps++;
+    Player.n_steps++;
 }
 
 function render(){
@@ -97,7 +122,7 @@ function render(){
         draw_cell_with_border(cur_x, cur_y, 'royalblue');
         console.log('y:' + cur_y + ', x:' + cur_x);
     }else{
-        window.alert("Goal! The number of steps is "+Player.steps+".");
+        window.alert("Goal! The number of steps is "+Player.n_steps+".");
         // start();
     }
 }
@@ -106,12 +131,13 @@ function render_with_trajectory(){
     if(Player.cur_state != goal){
         [pre_y,pre_x] = tocell(Player.pre_state);
         console.log('y:' + pre_y + ', x:' + pre_x);
-        draw_cell_with_border(pre_x, pre_y, 'darkgray');
+        const direction = get_act_direct(Player.pre_action);
+        draw_cell_with_border_and_text(pre_x, pre_y, 'lightgray', direction);
         [cur_y, cur_x] = tocell(Player.cur_state);
         draw_cell_with_border(cur_x, cur_y, 'royalblue');
         console.log('y:' + cur_y + ', x:' + cur_x);
     }else{
-        window.alert("Goal! The number of steps is "+Player.steps+".");
+        window.alert("Goal! The number of steps is "+Player.n_steps+".");
         // start();
     }
 }
@@ -163,6 +189,7 @@ wwwwwwwwwwwww`;
     }
     Player.pre_state = 0;
     Player.cur_state = 0;
+    Player.pre_action = 0;
     // const arange_state = createArangeArray(n_states);
     // const init_state = arange_state.filter(n => n != goal);
 }
@@ -184,5 +211,16 @@ function init_render() {
             }
             draw_cell_with_border(x + j, y + i, fillStyle);
         }
+    }
+}
+
+
+function render_trajectory(){
+    if(Player.history.length > 0){
+        init_render()
+        // TODO Trajectoryの描画とStartとGoalの描画。
+        // foreach(let step of history){
+            // TODO 
+        // }
     }
 }

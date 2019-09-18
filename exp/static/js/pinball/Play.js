@@ -34,7 +34,7 @@ function play_step(action){
     Player.cur_states = arange_state(Player.cur_state);
     postActionLog(play_id, Player.pre_states[0], Player.pre_states[1], Player.pre_states[2], Player.pre_states[3], action, null, Player.cur_states[0], Player.cur_states[1], Player.cur_states[2], Player.cur_states[3],Env.reward);
     if(!is_continue){
-        postTaskFinish(play_id, Player.steps, true);
+        postTaskFinish(play_id, Player.n_steps, true);
     }
     return is_continue;
 }

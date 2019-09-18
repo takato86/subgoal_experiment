@@ -123,7 +123,7 @@ function getActionHistory(given_play_id){
     const request = new XMLHttpRequest();
     let param = "play_id="+given_play_id
     request.responseType = "json"
-    request.open("GET", '/api/v1/action_Player.history?'+param);
+    request.open("GET", '/api/v1/action_history?'+param);
     request.addEventListener("error", ()=>{
         console.log("Network Error!")
     });
@@ -131,7 +131,7 @@ function getActionHistory(given_play_id){
         console.log(event.target.status);
         if(event.target.status == 200){
             const json = request.response;
-            Player.history = json.action_Player.history;
+            Player.history = json.action_history;
             goal = json.goal;
             // 再生開始
             init_replay();
