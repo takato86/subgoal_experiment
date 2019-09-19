@@ -82,3 +82,12 @@ class Evaluation(models.Model):
     
     def to_list(self):
         return [self.id, self.play.id, self.play.user.id, self.play.task, self.action.state1, self.action.state2, self.action.state3, self.action.state4, self.action.intent_action, self.action.actual_action, self.action.next_state1, self.action.next_state2, self.action.next_state3, self.action.next_state4, self.timestamp]
+
+
+class SubGoal(models.Model):
+    play = models.ForeignKey('Play', on_delete=models.CASCADE)
+    state = models.FloatField()
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    def to_list(self):
+        return [self.id, self.play.id, self.play.user.id, self.play.task, self.state]

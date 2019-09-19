@@ -119,6 +119,30 @@ function postTaskFinish(play_id, n_steps, is_goal){
     request.send(JSON.stringify(data));
 }
 
+function postSubGoals(play_id, subgoals){
+    const request = new XMLHttpRequest();
+    let data = {"subgoals":[]}
+    for(let i=0; i<subgoals.length; i++){
+        data["subgoals"].push({"play_id": play_id, "state": subgoals[i]})
+    }
+    request.open("POST", "/api/v1/subgoals");
+    request.addEventListener("error", ()=>{
+        console.log("Network Error!")
+    });
+    request.addEventListener("load", (event)=>{
+        if(event.target.status != 200){
+            console.log(`Error: ${event.target.status}`);
+            return
+        }
+        console.log(event.target.status);
+        console.log(event.target.responseText);
+    });
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
+    request.setRequestHeader("Content-Type", "application/json")
+    request.send(JSON.stringify(data));
+}
+
+
 function getActionHistory(given_play_id){
     const request = new XMLHttpRequest();
     let param = "play_id="+given_play_id

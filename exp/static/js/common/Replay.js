@@ -5,9 +5,10 @@ Participant.sub_goals = []
 let playButtons = document.getElementsByClassName("play_button");
 let showed_array = [];
 
-let rateHighButton = document.getElementById("rate-highly");
-let rateLowerButton = document.getElementById("rate-lower");
-
+// let rateHighButton = document.getElementById("rate-highly");
+// let rateLowerButton = document.getElementById("rate-lower");
+let completeButtom = document.getElementById("complete_buttom");
+completeButtom.addEventListener("click", clickSend)
 // rateHighButton.addEventListener("click", rateHighly);
 // rateLowerButton.addEventListener("click", rateLower);
 canvas.addEventListener("click", clickOnCanvas, false);
@@ -82,6 +83,11 @@ function rateHighly(){
 function rateLower(){
     postEvalLog(Env.play_id, Env.action_id, -1);
 }
+
+function clickSend(e){
+    postSubGoals(Env.play_id, Participant.sub_goals);
+}
+
 
 function clickOnCanvas(e){
     let rect = e.target.getBoundingClientRect();

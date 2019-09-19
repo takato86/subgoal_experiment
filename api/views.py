@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import json
 from django.http import HttpResponse
-from exp.models import Play, Action, Evaluation
+from exp.models import Play, Action, Evaluation, SubGoal
 # Create your views here.
 
 def render_json_responce(request, data, status=None):
@@ -80,3 +80,14 @@ def get_action_history(request):
         action_history.append(action.to_dict())
     data = {'action_history' : action_history, 'goal':play.goal}
     return render_json_responce(request, data)
+
+def save_subgoals(request):
+    request_json = json.loads(request.body)
+    subgoals = request_json["subgoals"]
+    for subgoal in subgoals:
+        play_id = subgoal["play_id"]
+        play = Play.objects.get(id=play_id)
+        state = subgoal["state"]
+        subgoal = SubGoal.objects.create(play=play, state=state)
+        subgoal.save()
+    return render_json_responce(request, {})

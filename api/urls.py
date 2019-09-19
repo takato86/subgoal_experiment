@@ -8,4 +8,5 @@ urlpatterns = [
     path('v1/actions/add', views.add_action, name='add_action'),   
     path('v1/evaluations/add', views.add_eval, name='add_eval'),
     path('v1/action_history', views.get_action_history, name='get_action_history'),
+    path('v1/subgoals', views.save_subgoals, name='save_subgoals')
 ]
