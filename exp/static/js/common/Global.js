@@ -1,6 +1,7 @@
 // task _type = ["reha", "exp"]
 let Player = {}
 let Env = {}
+let Participant = {}
 Env.play_id = -1;
 Env.host = location.hostname;
 Env.csrftoken = '';

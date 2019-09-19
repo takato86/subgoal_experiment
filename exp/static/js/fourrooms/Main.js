@@ -1,12 +1,14 @@
 const canvas = document.querySelector("#glcanvas");
+// canvas.width = screen.height / 2;
+// canvas.height = screen.height /2;
 var context = canvas.getContext("2d");
 let startButton = document.getElementById('startButton');
-let occupancy = [];
+Env.occupancy = [];
 let tostate = [];
 let height = 0;
 let width = 0;
-const cell_width = 50;
-const cell_height = 50;
+let cell_width = 40;
+let cell_height = 40;
 let n_states = 0;
 Env.start = null;
 Env.goal = 62;
@@ -107,7 +109,7 @@ function step(action){
         case 3:  next_x++; break;
         default: break;
     }
-    if(occupancy[next_y][next_x] == 1){
+    if(Env.occupancy[next_y][next_x] == 1){
         next_y = cur_y;
         next_x = cur_x;
     }
@@ -161,7 +163,7 @@ w     w     w
 wwwwwwwwwwwww`;
     let splited_layout = layout.split('\n');
     let cells = Array.from(splited_layout);
-    occupancy = [];
+    Env.occupancy = [];
     for(cell of cells){
         splited_cell = cell.split('');
         res_cell = splited_cell.map((str) => {
@@ -170,19 +172,19 @@ wwwwwwwwwwwww`;
             }
             return 0;
         });
-        occupancy.push(res_cell);
+        Env.occupancy.push(res_cell);
     }
     // javascriptはオブジェクトを参照で渡す。
-    for(row of occupancy){
+    for(row of Env.occupancy){
         c_row = row.concat();
         tostate.push(c_row);
     }
-    height = occupancy.length;
-    width = occupancy[0].length;
+    height = Env.occupancy.length;
+    width = Env.occupancy[0].length;
     n_states = 0;
     for(let y=0; y < height; y++){
         for(let x=0; x<width; x++){
-            if(occupancy[y][x] == 0){
+            if(Env.occupancy[y][x] == 0){
                 tostate[y][x] = n_states;
                 n_states++;
             }else{
@@ -190,6 +192,8 @@ wwwwwwwwwwwww`;
             }
         }
     }
+    cell_height = Math.floor(screen.height / 2 / height);
+    cell_width = Math.floor(screen.height / 2 / width);
     Player.pre_state = 0;
     Player.cur_state = 0;
     Player.pre_action = 0;
@@ -207,7 +211,7 @@ function init_render() {
     let fillStyle = ''
     for(let i=0; i<height; i++){
         for(let j=0; j<width; j++){
-            if(occupancy[i][j] == 1){
+            if(Env.occupancy[i][j] == 1){
                 fillStyle = 'black';
             }else{
                 fillStyle = 'white';

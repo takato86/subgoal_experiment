@@ -3,8 +3,8 @@ html, body{
 }
 
 canvas{
-    width: 30vw;
-    height: 30vh;
+    /* width: 30vw;
+    height: 30vh; */
     padding-left: 0;
     padding-right: 0;
     margin-left: auto;

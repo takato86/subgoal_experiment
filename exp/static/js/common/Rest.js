@@ -132,6 +132,7 @@ function getActionHistory(given_play_id){
         if(event.target.status == 200){
             const json = request.response;
             Player.history = json.action_history;
+            Env.clickable_states = json.action_history.map(x=>x['state1']);
             Env.goal = json.goal;
             // 再生開始
             init_replay();
