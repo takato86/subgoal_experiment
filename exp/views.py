@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.shortcuts import redirect
 from .utils import set_cookie
 from django.http import HttpResponseRedirect, HttpResponse
-from .models import Play, Task, User, Evaluation
+from .models import Play, Task, User, Evaluation, Trajectory
 import csv
 
 def render_description(request):
@@ -18,6 +18,9 @@ def render_reflection_description(request):
 
 def render_fourroom(request):
     return render(request, 'exp/tasks/fourrooms/fourroom.html', {})
+
+def render_register_trajectory(request):
+    return render(request, 'exp/tasks/fourrooms/register.html', {})
 
 def render_fourroom_reflection(request):
     # user_idとtask_type，taskが必要←requestに含まれる必要．
@@ -37,6 +40,13 @@ def render_pinball_reflection(request):
     task = task_id
     play_ids = Play.objects.filter(user=user, task=task, task_type=task_type).values('id')[:3]
     return render(request, 'exp/tasks/pinball/pinball_ref.html', {'play_ids':play_ids})
+
+def render_decide_subgoals(request):
+    task_id = request.COOKIES['task_id']
+    print("task_id: {}".format(task_id))
+    trajectory_ids = Trajectory.objects.filter(task=task_id).values("id")[:4]
+    print("trajectory_ids: {}".format(trajectory_ids))
+    return render(request, 'exp/tasks/fourrooms/decide_subgoals.html', {"trajectory_ids":trajectory_ids})
 
 def render_pinball(request):
     return render(request, 'exp/tasks/pinball/pinball.html', {})

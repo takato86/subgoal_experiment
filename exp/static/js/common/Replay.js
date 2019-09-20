@@ -61,7 +61,7 @@ function replay(interval=1000){
         if(counter >= Player.history.length){
             clearInterval(repeat);
             window.alert("Replay ended.")
-            render_trajectory();
+            render_trajectory(Player.history);
             return;
         }
         log = Player.history[counter];
@@ -114,4 +114,4 @@ function clickOnCanvas(e){
 }
 
 
-init_play_buttons();
+// init_play_buttons();

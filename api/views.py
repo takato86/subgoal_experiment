@@ -1,7 +1,8 @@
 from django.shortcuts import render
 import json
 from django.http import HttpResponse
-from exp.models import Play, Action, Evaluation, SubGoal
+from exp.models import Play, Action, Evaluation, SubGoal,\
+                       Trajectory, Experience
 # Create your views here.
 
 def render_json_responce(request, data, status=None):
@@ -90,4 +91,23 @@ def save_subgoals(request):
         state = subgoal["state"]
         subgoal = SubGoal.objects.create(play=play, state=state)
         subgoal.save()
+    return render_json_responce(request, {})
+
+
+def register_trajectory(request):
+    request_json = json.loads(request.body)
+    task_id = request_json["task_id"];
+    task_type = request_json["task_type"];
+    n_steps = request_json["n_steps"];
+    goal = request_json["goal"];
+    experiences = request_json["trajectory"];
+    trajectory = Trajectory(task=task_id, n_steps=n_steps, goal=goal, task_type=task_type)
+    trajectory.save()
+    for order, experience_dict in enumerate(experiences):
+        order = order + 1
+        state = experience_dict["state1"]
+        action = experience_dict["actual_action"]
+        next_state = experience_dict["next_state1"]
+        experience = Experience(order=order, trajectory=trajectory, state=state, action=action, next_state=next_state)
+        experience.save()
     return render_json_responce(request, {})

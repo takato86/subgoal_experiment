@@ -81,7 +81,7 @@ function draw_cell_with_border_and_text(pos_x, pos_y, color, text){
 
 function draw_text_in_cell(pos_x, pos_y, text){
     context.fillStyle='black';
-    context.font = '40px Arial';
+    context.font = '30px Arial';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.fillText(text, pos_x*cell_width + cell_width / 2, pos_y*cell_height + cell_height/2 );
@@ -192,11 +192,12 @@ wwwwwwwwwwwww`;
             }
         }
     }
-    cell_height = Math.floor(screen.height / 2 / height);
-    cell_width = Math.floor(screen.height / 2 / width);
+    cell_height = Math.floor(screen.height / 1.5 / height);
+    cell_width = Math.floor(screen.height / 1.5 / width);
     Player.pre_state = 0;
     Player.cur_state = 0;
     Player.pre_action = 0;
+    Player.trajectory = [];
     // const arange_state = createArangeArray(n_states);
     // const init_state = arange_state.filter(n => n != goal);
 }
@@ -221,12 +222,12 @@ function init_render() {
     }
 }
 
-function render_trajectory(){
+function render_trajectory(trajectory){
     let log, cell, state, actual_action, direction;
-    if(Player.history.length > 0){
+    if(trajectory.length > 0){
         init_render();
-        for(let i=0; i < Player.history.length; i++){
-            log = Player.history[i];
+        for(let i=0; i < trajectory.length; i++){
+            log = trajectory[i];
             state = log["state1"];
             actual_action = log["actual_action"];
             cell = tocell(state);

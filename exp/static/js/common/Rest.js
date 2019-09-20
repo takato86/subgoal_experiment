@@ -70,6 +70,33 @@ function postActionLog(play_id, state1, state2, state3, state4, actual_action, i
     request.send(JSON.stringify(data));
 }
 
+function postTrajectory(n_steps, goal, trajectory){
+    const request = new XMLHttpRequest();
+    // Trajectory: [{"state", "action", "next_state"}]
+    const data = {
+        "task_id" : Env.task_id,
+        "task_type": Env.task_type,
+        "n_steps": n_steps,
+        "goal": goal,
+        "trajectory": trajectory
+    };
+    request.open("POST", "/api/v1/trajectories/register");
+    request.addEventListener("error", ()=>{
+        console.log("Network Error!")
+    });
+    request.addEventListener("load", (event)=>{
+        if(event.target.status != 200){
+            console.log(`Error: ${event.target.status}`);
+            return
+        }
+        console.log(event.target.status);
+        console.log(event.target.responseText);
+    });
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
+    request.setRequestHeader("Content-Type", "application/json")
+    request.send(JSON.stringify(data));
+}
+
 function postEvalLog(play_id, action_id, eval){
     const request = new XMLHttpRequest();
     const data = {
@@ -142,11 +169,27 @@ function postSubGoals(play_id, subgoals){
     request.send(JSON.stringify(data));
 }
 
+function getTrajectory(trajectory_id){
+    const request = new XMLHttpRequest();
+    let param = "trajectory_id="+trajectory_id;
+    request.responseType = "json";
+    request.open("GET", '/api/v1/trajectory?'+param);
+    request.addEventListener("error", ()=>{
+        console.log("Network Error!")
+    });
+    request.addEventListener("load", (event)=>{
+        console.log(event.target.status);
+        const json = request.response;
+        // TODO
+    })
+}
+
+
 
 function getActionHistory(given_play_id){
     const request = new XMLHttpRequest();
     let param = "play_id="+given_play_id
-    request.responseType = "json"
+    request.responseType = "json";
     request.open("GET", '/api/v1/action_history?'+param);
     request.addEventListener("error", ()=>{
         console.log("Network Error!")
