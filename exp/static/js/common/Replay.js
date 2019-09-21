@@ -2,78 +2,99 @@
 Env.action_id;
 Env.clickable_states = []
 Participant.sub_goals = []
-let playButtons = document.getElementsByClassName("play_button");
+let playButton = document.getElementById("playButton");
 let showed_array = [];
 
 // let rateHighButton = document.getElementById("rate-highly");
 // let rateLowerButton = document.getElementById("rate-lower");
-let completeButtom = document.getElementById("complete_buttom");
-completeButtom.addEventListener("click", clickSend)
+let completeButton = document.getElementById("complete_button");
 // rateHighButton.addEventListener("click", rateHighly);
 // rateLowerButton.addEventListener("click", rateLower);
-canvas.addEventListener("click", clickOnCanvas, false);
+playButton.addEventListener("click", click_play_button, false);
+window.addEventListener("load", update_status);
+
+
+function update_status(){
+    const check_icon = '<span class="uk-margin-small-right" uk-icon="check"></span>';
+    let trajectory_ids = document.getElementsByName("trajectory");
+    let trajectory_id, existing_text, complete_trajectory_id;
+    for(let i=0; i<trajectory_ids.length; i++){
+        trajectory_id = trajectory_ids[i];
+        complete_trajectory_id = get_trajectory_id() - 1;
+        if(complete_trajectory_id >= parseInt(trajectory_id.getAttribute("value")) || complete_trajectory_id <= -1){
+            existing_text = trajectory_id.innerHTML;
+            if(existing_text.indexOf('uk-icon="check"') == -1){
+                trajectory_id.innerHTML = check_icon + existing_text;
+            }
+        }
+    }
+}
+
+function get_trajectory_id(){
+    complete_trajectory_id = window.sessionStorage.getItem(['trajectory_id']);
+    const trajectory_ids = document.getElementsByName("trajectory");
+    if(complete_trajectory_id == null){
+        return 1;
+    }else if(parseInt(complete_trajectory_id) >= trajectory_ids.length){
+        return -1;
+    }else{
+        return parseInt(complete_trajectory_id) + 1;
+    }
+}
+
+function　start_replay(request){
+    const json = request.response;
+    Env.clickable_states = json.trajectory.map(x=>x['state1']);
+    Env.goal = json.goal;
+    Player.action_history = json.trajectory;
+    const trajectory = json.trajectory;
+    // 再生開始
+    init_replay(trajectory[0]["state1"]);
+    if(Env.task_id==1){
+        replay(trajectory, 1000);
+    }
+    if(Env.task_id==2){
+        replay(trajectory, 50);
+    }
+}
 
 function click_play_button(event){
-    let play_button = event.target;
-    Env.play_id = parseInt(play_button.getAttribute("value"))
-    if(Env.play_id == null || Env.play_id == -1){
-        console.log("task id is null.")
-        return;
-    }
-    getActionHistory(Env.play_id);
-    play_button.style.display = "none";
-    // TODO ↓の判定がイケてない
-    for(let play_button of playButtons){
-        if(showed_array.indexOf(parseInt(play_button.getAttribute("value"))) == -1){
-            play_button.style.display = "";
-            showed_array.push(parseInt(play_button.getAttribute("value")));
-            break;
-        }
+    trajectory_id = get_trajectory_id();
+    if(trajectory_id == -1){
+        playButton.textContent = "Complete";
+    }else{
+        event.target.style.display = 'none';
+        getTrajectory(trajectory_id, start_replay);
     }
 }
 
-function init_play_buttons(){
-    for(let i=0; i<3; i++){
-        // TODO jsはobjectの判定ができるか？
-        showed_array.push(parseInt(playButtons[i].getAttribute("value")));
-    }
-    if(playButtons.length > 3){
-        for(let i=3; i<playButtons.length; i++){
-            playButtons[i].style.display = "none";
-        }
-    }
-}
-
-function init_replay(){
+function init_replay(start_state){
     // リプレイの初期化
     init_variables(); // Mainの中でそれぞれ定義
-    start_state = restore_state(Player.history[0]);
+    // start_state = restore_state(start);
     init_render(); //Mainの中でそれぞれ定義
     start(start_state);
 }
 
-function replay(interval=1000){
+function replay(trajectory, interval=1000){
     // リプレイ，１秒ごとに更新
     let counter = 0;
     let log;
     clearInterval(repeat)
     repeat = setInterval(function(){
-        if(counter >= Player.history.length){
+        if(counter >= trajectory.length){
             clearInterval(repeat);
-            window.alert("Replay ended.")
-            render_trajectory(Player.history);
+            canvas.addEventListener("click", clickOnCanvas, false);
+            completeButton.addEventListener("click", clickSend, false);
+            render_trajectory(trajectory);
             return;
         }
-        log = Player.history[counter];
+        log = trajectory[counter];
         Env.action_id = log["id"];
         step(parseInt(log["actual_action"]));
         render_with_trajectory();
         counter++;
     }, interval);
-}
-
-for(i = 0; i<playButtons.length; i++){
-    playButtons[i].addEventListener("click", click_play_button);
 }
 
 function rateHighly(){
@@ -85,9 +106,25 @@ function rateLower(){
 }
 
 function clickSend(e){
-    postSubGoals(Env.play_id, Participant.sub_goals);
+    if(Participant.sub_goals.length == 2){
+        trajectory_id = get_trajectory_id();
+        postSubGoals(trajectory_id, Participant.sub_goals);
+        window.sessionStorage.setItem(['trajectory_id'], [trajectory_id]);
+        alert("サブゴール情報を登録しました．");
+        next_task();
+    }else{
+        write_console("サブゴールは2箇所に設定してください．");
+    }
 }
 
+function next_task(){
+    playButton.style.display = 'block';
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.removeEventListener("click", clickOnCanvas, false);
+    completeButton.removeEventListener("click", clickSend, false);
+    write_console("");
+    update_status()
+}
 
 function clickOnCanvas(e){
     let rect = e.target.getBoundingClientRect();
@@ -103,7 +140,7 @@ function clickOnCanvas(e){
         const subgoal_index = Participant.sub_goals.indexOf(state);
         if(subgoal_index >= 0){
             Participant.sub_goals.splice(subgoal_index, 1);
-            const actual_action = Player.history[history_index]["actual_action"];
+            const actual_action = Player.action_history[history_index]["actual_action"];
             const direction = get_act_direct(parseInt(actual_action));
             draw_cell_with_border_and_text(cell_x, cell_y, 'lightgray', direction);
         }else if(Participant.sub_goals.length < 2){
@@ -112,6 +149,8 @@ function clickOnCanvas(e){
         }
     }
 }
+
+
 
 
 // init_play_buttons();

@@ -2,17 +2,30 @@
 {% load static %}
 {% block content %}
 <h2><span class="uk-text-background"></span></h2>
-<div class="uk-section uk-section-default">
+<div class="uk-section-default">
     <div class="uk-container">
-        <h3>迷路タスク説明</h3>
-        <div class="uk-grid-match uk-child-width-1-1@m" ukgrid>
-            <div>
-                <p>本タスクはスタートから最短でゴールに到達するタスクです．参加者が操作するプレイヤーが青いセル，ゴールが赤いセルで示されます．プレイヤーをできるだけ少ない操作でゴールへ到達してください．プレイヤーはキーボードの上下左右で操作ができます．</p>
-            </div>
+        <h2>タスク説明</h2>
+        <div class="uk-margin uk-padding-small">
+            <p>
+                本実験の目的は迷路問題の解き方に関する参加者の知識を得ることです．
+                提示されるスタートからゴールへの行き方（軌跡）を観察して，サブゴール（中継地点）を設定するタスクです．
+                提示される軌跡はスタートからゴールまで最短で到達しようとした結果得られたものです．
+                別の人がスタートから始めたときに最短でゴールに到達するためのヒントになるようなサブゴールを軌跡上で２箇所，設定してください．
+            </p>
+            <p>
+                ４通りの軌跡が提示されるので，それぞれに対してサブゴールを2箇所ずつ（計8箇所の中継地点）設定してください．
+            </p>
+            <p>
+                黒セル（マス）は壁を表し，青セルがスタート，オレンジセルがゴールを示しています．軌跡はグレーセルで，セルの中の矢印はそのセルでとった行動（移動方向）を表しています．
+            </p>
+            
+            <p>
+
+            </p>
         </div>
-    </div>
-    <div class="uk-container">
-            <a class='uk-button uk-button-default' href="{% url 'fourroom' %}">次へ</a>
+        <div class="uk-margin">
+            <a class='uk-button uk-button-default' href="{% url 'decide_subgoals' %}">次へ</a>
+        </div>
     </div>
 </div>
 {% endblock %}

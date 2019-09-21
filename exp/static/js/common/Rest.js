@@ -146,11 +146,11 @@ function postTaskFinish(play_id, n_steps, is_goal){
     request.send(JSON.stringify(data));
 }
 
-function postSubGoals(play_id, subgoals){
+function postSubGoals(trajectory_id, subgoals){
     const request = new XMLHttpRequest();
     let data = {"subgoals":[]}
     for(let i=0; i<subgoals.length; i++){
-        data["subgoals"].push({"play_id": play_id, "state": subgoals[i]})
+        data["subgoals"].push({"trajectory_id": trajectory_id, "user_id": Env.user_id, "state": subgoals[i]})
     }
     request.open("POST", "/api/v1/subgoals");
     request.addEventListener("error", ()=>{
@@ -169,22 +169,23 @@ function postSubGoals(play_id, subgoals){
     request.send(JSON.stringify(data));
 }
 
-function getTrajectory(trajectory_id){
+function getTrajectory(trajectory_id, callback){
     const request = new XMLHttpRequest();
     let param = "trajectory_id="+trajectory_id;
     request.responseType = "json";
-    request.open("GET", '/api/v1/trajectory?'+param);
+    request.open("GET", '/api/v1/trajectories?'+param);
     request.addEventListener("error", ()=>{
         console.log("Network Error!")
     });
     request.addEventListener("load", (event)=>{
         console.log(event.target.status);
-        const json = request.response;
-        // TODO
-    })
+        if(event.target.status == 200){
+            callback(request);
+        }
+    });
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
+    request.send();
 }
-
-
 
 function getActionHistory(given_play_id){
     const request = new XMLHttpRequest();
@@ -202,14 +203,13 @@ function getActionHistory(given_play_id){
             Env.clickable_states = json.action_history.map(x=>x['state1']);
             Env.goal = json.goal;
             // 再生開始
-            init_replay();
+            init_replay(restore_state(Player.history[0]));
             if(Env.task_id==1){
-                replay(1000);
+                replay(Player.history, 1000);
             }
             if(Env.task_id==2){
-                replay(50);
+                replay(Player.history, 50);
             }
-            
         }
         if(event.target.status != 200){
             console.log(`Error: ${event.target.status}`);

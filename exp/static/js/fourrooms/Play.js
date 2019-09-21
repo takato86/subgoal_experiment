@@ -1,3 +1,4 @@
+let startButton = document.getElementById('startButton');
 startButton.addEventListener("click",clickStartButton);
 let n_runs = 5;
 // let counterText = document.getElementById('counter');
@@ -6,12 +7,12 @@ let n_runs = 5;
 let alternative = function(){return}
 
 function clickStartButton(){
-    let startButton = document.getElementById('startButton');
     startButton.style.display = 'none';
     // play idを得てから処理を進める処理
     init_variables();
     init_render();
     start();
+    document.addEventListener("keydown", act);
     postTaskStart(Env.goal, alternative);
     // counterText.textContent = String(n_runs);
 }
@@ -25,11 +26,17 @@ function endTask(){
     // let startButton = document.getElementById('startButton');
     // startButton.style.display = 'block';
     // context.clearRect(0, 0, canvas.width, canvas.height);
+    document.removeEventListener("keydown", act);
     render_trajectory(Player.trajectory);
 }
 
-document.onkeydown = function(e){
+// onKeyDown
+function act(e){
     console.log(e.keyCode);
+    if(e.preventDefault){
+        e.preventDefault();
+    }
+    e.returnValue = false;
     switch(e.keyCode){
         case 38: 
             play_step(0);
@@ -43,10 +50,11 @@ document.onkeydown = function(e){
         case 39: 
             play_step(3);
             break;
-        default: break;
+        default: return;
     }
     window.requestAnimationFrame(render_with_trajectory);
 }
+
 
 function play_step(action){
     step(action);

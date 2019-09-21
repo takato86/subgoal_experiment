@@ -4,12 +4,13 @@ from django.core import validators
 
 
 class User(models.Model):
-    age = models.PositiveSmallIntegerField(verbose_name='年齢', validators=[validators.MinValueValidator(1, message='年齢は1以上で入力してください',), validators.MaxValueValidator(120)])
-    mail = models.EmailField(verbose_name="メールアドレス")
-    SEX_CHOICES = ((0, '男性'), (1, '女性'), (2, '答えたくない'))
-    sex = models.IntegerField(verbose_name='性別', choices = SEX_CHOICES, default=0)
+    # age = models.PositiveSmallIntegerField(verbose_name='年齢', validators=[validators.MinValueValidator(1, message='年齢は1以上で入力してください',), validators.MaxValueValidator(120)])
+    # mail = models.EmailField(verbose_name="メールアドレス")
+    # SEX_CHOICES = ((0, '男性'), (1, '女性'), (2, '答えたくない'))
+    # sex = models.IntegerField(verbose_name='性別', choices = SEX_CHOICES, default=0)
+    name = models.CharField(max_length=127)
+    is_acceptance = models.BooleanField()
     created_datetime = models.DateTimeField(default=timezone.now)
-
 
 class Task(models.Model):
     title = models.CharField(max_length=127)
@@ -80,7 +81,7 @@ class Experience(models.Model):
     next_state = models.IntegerField()
 
     def to_dict(self):
-        return {"id": self.id, "order":self.order, "state": self.state, "action": self.action, "next_state": self.next_state}
+        return {"id": self.id, "order":self.order, "state1": self.state, "actual_action": self.action, "next_state1": self.next_state}
 
 
 class Action(models.Model):
@@ -112,11 +113,11 @@ class Evaluation(models.Model):
 
 
 class SubGoal(models.Model):
-    # play = models.ForeignKey('Play', on_delete=models.CASCADE)
+    trajectory = models.ForeignKey('Trajectory', on_delete=models.CASCADE)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     state = models.FloatField()
     timestamp = models.DateTimeField(default=timezone.now)
 
     def to_list(self):
-        return [self.id, self.play.id, self.play.user.id, self.play.task, self.state]
+        return [self.id, self.trajectory.id, self.play.user.id, self.state]
 

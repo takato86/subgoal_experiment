@@ -3,34 +3,31 @@
 {% block content %}
 <span id="task" data-taskid=1 data-tasktype="reha"></span>
 <div><h2>Task</h2></div>
-<div id='experiment'>
-    <div class="task-block">
-        <div class="uk-grid">
-            <div id='display'>
-    <!-- TODO タスクの表示 -->
-                <button id='startButton' class='uk-button uk-button-default'>START</button>
-                <canvas id="glcanvas" width="400" height="400">
-                    このブラウザは
-                    <code>&lt;canvas&gt;</code> 要素をサポートしていません。
-                </canvas>
-            </div>
-            <div id='control'>
-                <label class="uk-form-label" for="form-stacked-text">Start State</label>
-                <div class="uk-margin">
-                        <input id="start_state" class="uk-input" type="text" placeholder="Input" pattern="[0-9]+">
-                </div>
-                <label class="uk-form-label" for="form-stacked-text">Goal State</label>
-                <div class="uk-margin">
-                        <input id="goal_state" class="uk-input" type="text" placeholder="Input" pattern="[0-9]+">
-                </div>
-                <div class="uk-margin">
-                        <button id='resetButton' class='uk-button uk-button-default'>RESET</button>
-                </div>
-                <div class="uk-margin">
-                        <button id='registerButton' class='uk-button uk-button-default'>REGISTER</button>
-                </div>
-                <p id="log_console"></p>
-            </div>
+<div uk-grid>
+    <div class='uk-width-3-4'>
+        <button id='startButton' class='uk-button uk-button-default'>START</button>
+        <canvas id="glcanvas" width="400" height="400">
+            このブラウザは
+            <code>&lt;canvas&gt;</code> 要素をサポートしていません。
+        </canvas>
+    </div>
+    <div class='uk-width-1-4' uk-grid>
+        <label class="uk-form-label" for="form-stacked-text">Start State</label>
+        <div class="uk-margin">
+            <input id="start_state" class="uk-input" type="text" placeholder="Input" pattern="[0-9]+">
+        </div>
+        <label class="uk-form-label" for="form-stacked-text">Goal State</label>
+        <div class="uk-margin">
+            <input id="goal_state" class="uk-input" type="text" placeholder="Input" pattern="[0-9]+">
+        </div>
+        <div class="uk-margin">
+            <button id='resetButton' class='uk-button uk-button-default'>RESET</button>
+        </div>
+        <div class="uk-margin">
+            <button id='registerButton' class='uk-button uk-button-default'>REGISTER</button>
+        </div>
+        <div class="uk-margin">
+            <p id="log_console"></p>
         </div>
     </div>
 </div>

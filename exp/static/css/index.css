@@ -11,21 +11,22 @@ canvas{
     margin-right: auto;
     display: block;
 }
-.main{
-    height:100vh;
+
+.container{
+    display: flex;
 }
+
 .left{
     float:left;
     width: 20%;
-    height: 100vh;
     padding: 2vh;
     box-sizing: border-box;
 }
+
 .right{
     /* display: inline-block; */
     float:left;
     width: 80%;
-    height: 100vh;
     padding: 2vh;
     box-sizing: border-box;
 }

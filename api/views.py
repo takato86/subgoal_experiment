@@ -2,7 +2,7 @@ from django.shortcuts import render
 import json
 from django.http import HttpResponse
 from exp.models import Play, Action, Evaluation, SubGoal,\
-                       Trajectory, Experience
+                       Trajectory, Experience, User
 # Create your views here.
 
 def render_json_responce(request, data, status=None):
@@ -76,20 +76,32 @@ def get_action_history(request):
     data = {}
     play = Play.objects.get(id=play_id)
     action_history = []
-    
     for action in Action.objects.filter(play=play):
         action_history.append(action.to_dict())
     data = {'action_history' : action_history, 'goal':play.goal}
     return render_json_responce(request, data)
 
+def get_trajectory(request):
+    if 'trajectory_id' in request.GET:
+        trajectory_id = request.GET.get('trajectory_id')
+    trajectory = Trajectory.objects.get(id=trajectory_id)
+    data = {}
+    experiences = []
+    for experience in Experience.objects.filter(trajectory=trajectory):
+        experiences.append(experience.to_dict())
+    data = {'trajectory': experiences, 'goal':trajectory.goal}
+    return render_json_responce(request, data)
+
 def save_subgoals(request):
-    request_json = json.loads(request.body)
-    subgoals = request_json["subgoals"]
+    request_json = json.loads(request.body);
+    subgoals = request_json["subgoals"];
     for subgoal in subgoals:
-        play_id = subgoal["play_id"]
-        play = Play.objects.get(id=play_id)
-        state = subgoal["state"]
-        subgoal = SubGoal.objects.create(play=play, state=state)
+        trajectory_id = subgoal["trajectory_id"];
+        trajectory = Trajectory.objects.get(id=trajectory_id);
+        user_id = subgoal["user_id"];
+        user = User.objects.get(id=user_id);
+        state = subgoal["state"];
+        subgoal = SubGoal.objects.create(trajectory=trajectory, user=user, state=state);
         subgoal.save()
     return render_json_responce(request, {})
 

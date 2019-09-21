@@ -2,20 +2,67 @@
 {% load static %}
 {% block content %}
 <h2><span class="uk-text-background"></span></h2>
-<div class="uk-section uk-section-default">
+<div class="uk-section-default">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="uk-alert-warning" uk-alert>
+            <!-- <button type="button" uk-close></button> -->
+            <a class="uk-alert-close" uk-close></a>
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+    {% endif %}
     <div class="uk-container">
-        <h3>実験説明</h3>
-        <div class="uk-grid-match uk-child-width-1-2@m" ukgrid>
-            <div>
-                <p>本実験は人（参加者）が設定するサブゴールを取得する実験です．ここでサブゴールとは，ある問題を解くためのキーポイントとなる状態のことを指します．例えば，＜例＞．</p>
-            </div>
-            <div>
-                <p>実験の流れは，はじめに迷路タスクを解いていただきます．その後，参加者の解き方をリプレイするので，そのリプレイを見てサブゴールを選択していただきます．</p>
-            </div>
+        <div class='uk-margin'>
+            <h2>実験説明</h2>
+            本実験は，総合研究大学院大学の奥戸嵩登が実施するものです．本実験は「強化学習における人間のサブゴール知識転移」についてのものです．実験の時間は，全体で10分程度を予定しています．
+            提示されるスタートからゴールへの行き方（軌跡）を観察して，サブゴール（中継地点）を設定するタスクに取り組んでいただきます．
+            すべてのデータは，webブラウザを通して自動的に取得されます．また，参加者に対して，身体的・精神的苦痛をかけることはないよう，さらに参加者の名誉や人格の侵害にならように十分に配慮いたします．
         </div>
     </div>
-    <div class="uk-container">  
-            <a class='uk-button uk-button-default' href="{% url 'play_fourroom_description' %}">次へ</a>
+    <hr class="uk-margin">
+    <div class="uk-container">
+        <form action="" method="post">
+        {% csrf_token %}
+        <fieldset class='uk-fieldset'>
+        <!-- class="uk-child-width-1-1@m" -->
+            <h2>同意事項</h2>
+            <div class='uk-margin'>
+                <p>
+                        私は，「強化学習における人間のサブゴール知識転移」の研究について，目的・方法・予測される問題等について実験者より説明文書を用いて十分な説明を受け，本実験に関する以下の項目を了解しました．
+                </p>
+                <ul class="uk-list uk-list-bullet uk-margin-top">
+                    <li>研究内容について．</li>
+                    <li>参加者に対して身体的・精神的苦痛を与えないこと．</li>
+                    <li>自らの自由意思でいつでも実験を中止できること．</li>
+                    <li>いかなる時点において実験参加の拒否をしても何ら不利益を被らないこと．</li>
+                    <li>被験者の名誉や人格の侵害にならないこと．</li>
+                    <li>実験で得られたデータは，委託元に受け渡され，個人が特定できない形の統計情報として，論文，学会発表で用いられる場合があること．</li>
+                    <li>万一不利益を被った場合には，当該ネット調査会社に対して申し立てを行うことができること．</li>
+                </ul>
+                <p>
+                        以上をふまえて自らの意思により，「強化学習における人間のサブゴール知識転移」の実験の参加者になることに同意しますか？                    
+                </p>
+            </div>
+            <div class="uk-margin uk-child-width-auto uk-grid">
+                <label><input class="uk-radio" type="radio" name="acceptance" value=1> 同意します．</label>
+                <label><input class="uk-radio" type="radio" name="acceptance" value=0 checked> 同意しません．</label>
+            </div>
+            <div class='uk-margin'>
+                <p>【本件問い合わせ先】<br>
+                    国立情報学研究所 山田誠二 seiji[at]nii.ac.jp</p>
+            </div>
+           <div class='uk-margin'>
+                <label class="uk-form-label" for="name">氏名</label>
+                <input class="uk-input" id="name" type="text" name="full_name" placeholder="Some text...">
+           </div>
+            <div class='uk-margin'>
+                <input type="submit" class='uk-button uk-button-default' value="送信">
+                    <!-- <a class='uk-button uk-button-default' href="{% url 'play_fourroom_description' %}">次へ</a> -->
+            </div>
+            
+        </fieldset>
+        </form>
     </div>
 </div>
 {% endblock %}

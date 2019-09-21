@@ -8,7 +8,23 @@ from .models import Play, Task, User, Evaluation, Trajectory
 import csv
 
 def render_description(request):
-    return render(request, 'exp/description.html', {})
+    messages = []
+    if request.method == 'POST':
+        acceptance = int(request.POST.get("acceptance"))
+        name = request.POST.get("full_name")
+        if acceptance == 1 and len(name) > 0:
+            created_date = timezone.now()
+            user = User(name=name, is_acceptance=acceptance, created_datetime=created_date)
+            user.save()
+            response = HttpResponseRedirect('./exp/tasks/fourroom/play/description')
+            set_cookie(response, 'user_id', user.id, 365*24*60*60)
+            return response
+        else:
+            if len(name) == 0:
+                messages.append("必要な情報を入力してください．")
+            if acceptance == 0:
+                messages.append("同意いただけない場合は，問い合わせ先に連絡をしてください．")
+    return render(request, 'exp/description.html', {"messages":messages})
 
 def render_play_description(request):
     return render(request, 'exp/tasks/fourrooms/play_description.html', {})
@@ -43,9 +59,7 @@ def render_pinball_reflection(request):
 
 def render_decide_subgoals(request):
     task_id = request.COOKIES['task_id']
-    print("task_id: {}".format(task_id))
     trajectory_ids = Trajectory.objects.filter(task=task_id).values("id")[:4]
-    print("trajectory_ids: {}".format(trajectory_ids))
     return render(request, 'exp/tasks/fourrooms/decide_subgoals.html', {"trajectory_ids":trajectory_ids})
 
 def render_pinball(request):

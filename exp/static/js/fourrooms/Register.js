@@ -1,17 +1,22 @@
-let register_buttom = document.getElementById('registerButton');
-let reset_buttom = document.getElementById('resetButton');
+let register_button = document.getElementById('registerButton');
+let reset_button = document.getElementById('resetButton');
 Player.trajectory = [];
 
-reset_buttom.addEventListener("click", resetStart);
-register_buttom.addEventListener("click", register);
+reset_button.addEventListener("click", resetStart);
+register_button.addEventListener("click", register);
 
 function register(){
-    postTrajectory(Player.n_steps, Env.goal, Player.trajectory);
-    write_console("軌跡が登録されました．");
-    init_variables();
-    init_render();
-    start();
-    postTaskStart(Env.goal, alternative);
+    if(Env.goal == Player.cur_state){
+        postTrajectory(Player.n_steps, Env.goal, Player.trajectory);
+        write_console("軌跡が登録されました．");
+        init_variables();
+        init_render();
+        start();
+        document.addEventListener("keydown", act);
+        postTaskStart(Env.goal, alternative);
+    }else{
+        write_console("軌跡を登録できませんでした．");
+    }
 }
 
 function resetStart(){
@@ -28,6 +33,7 @@ function resetStart(){
         init_variables();
         init_render();
         start(start_state);
+        document.addEventListener("keydown", act);
         write_console("スタート状態がセットされました．");
     }else{
         write_console("Start Stateが状態に含まれない値です．");
@@ -43,9 +49,4 @@ function containState(state){
         }
     }
     return false;
-}
-
-function write_console(text){
-    let log_console = document.getElementById('log_console');
-    log_console.textContent = text;
 }

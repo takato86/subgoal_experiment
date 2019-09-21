@@ -3,9 +3,13 @@
     <head>
         <meta charset="utf-8">
         <title>subgoal transfer</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{% static 'css/index.css' %}">
         <link rel="stylesheet" href="{% static 'css/uikit-rtl.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/uikit.min.css' %}">
+        <script src="{% static 'js/uikit/uikit.min.js' %}"></script>
+        <script src="{% static 'js/uikit/uikit-icons.min.js' %}"></script>
     </head>
     <script src="{% static 'js/common/Global.js'%}"></script>
     <body>
@@ -13,28 +17,26 @@
             <h1>Subgoal Transfer Experiments</h1>
         </header>
         <main>
-            <div class='left uk-background-muted'>
-                {% block sidebar %}
-                    <div class="uk-width-1-1@s uk-width-1-1@m">
-                        <h5>実験の流れ</h5>
-                        <ul class='uk-list uk-list-large'>
-                            <li>実験説明</li> 
-                            <!-- <li><span class="uk-text-background">迷路タスク</span></li> -->
-                            <!-- class="uk-active"  -->
-                            <li>タスク説明</li>
-                            <li>タスク</li>
-                            <li>振り返りタスク説明</li>
-                            <li>振り返りタスク</li>
-                            <li>実験後アンケート</li>
-                        </ul>
-                    </div>
-                {% endblock %}
+            <div class="container">
+                <div class='left uk-background-muted uk-background-contain'>
+                    {% block sidebar %}
+                        <div class="uk-width-1-1@s uk-width-1-1@m">
+                            <h5>実験の流れ</h5>
+                            <ul class='uk-list uk-list-large'>
+                                <li>実験説明・同意事項</li> 
+                                <!-- <li><span class="uk-text-background">迷路タスク</span></li> -->
+                                <!-- class="uk-active"  -->
+                                <li>タスク説明</li>
+                                <li>タスク</li>
+                            </ul>
+                        </div>
+                    {% endblock %}
+                </div>
+                <div class='right'>
+                    {% block content %}
+                    {% endblock %}
+                </div>    
             </div>
-            <div class='right'>
-                {% block content %}
-                {% endblock %}
-            </div>    
-            
         </main>
         <footer id='foot' class='uk-background-secondary uk-light uk-padding'>
             <div>Ymd-lab Takato Okudo</div>

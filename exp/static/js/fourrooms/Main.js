@@ -2,7 +2,6 @@ const canvas = document.querySelector("#glcanvas");
 // canvas.width = screen.height / 2;
 // canvas.height = screen.height /2;
 var context = canvas.getContext("2d");
-let startButton = document.getElementById('startButton');
 Env.occupancy = [];
 let tostate = [];
 let height = 0;
@@ -127,7 +126,7 @@ function render(){
         draw_cell_with_border(cur_x, cur_y, 'royalblue');
         console.log('y:' + cur_y + ', x:' + cur_x);
     }else{
-        window.alert("Goal! The number of steps is "+Player.n_steps+".");
+        alert("Goal! The number of steps is "+Player.n_steps+".");
         // start();
     }
 }
@@ -142,7 +141,7 @@ function render_with_trajectory(){
         draw_cell_with_border(cur_x, cur_y, 'royalblue');
         console.log('y:' + cur_y + ', x:' + cur_x);
     }else{
-        window.alert("Goal! The number of steps is "+Player.n_steps+".");
+        alert("Goal! The number of steps is "+Player.n_steps+".");
         // start();
     }
 }
@@ -241,4 +240,9 @@ function render_trajectory(trajectory){
     }else{
         console.log("History is null.");
     }
+}
+
+function write_console(text){
+    let log_console = document.getElementById('log_console');
+    log_console.textContent = text;
 }
