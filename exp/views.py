@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.shortcuts import redirect
 from .utils import set_cookie
 from django.http import HttpResponseRedirect, HttpResponse
-from .models import Play, Task, User, Evaluation, Trajectory
+from .models import Play, Task, User, Evaluation, Trajectory, Experience
 import csv
 
 def render_description(request):
@@ -84,10 +84,14 @@ def render_end_page(request):
 
 def export_csv(request):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="eval.csv"'
+    response['Content-Disposition'] = 'attachment; filename="trajectory.csv"'
     writer = csv.writer(response)
-    csv_header = ["eval_id", "play_id", "user_id", "task_name", "state1", "state2", "state3", "state4", "intent_action", "actual_action", "next_state1", "next_state2", "next_state3", "next_state4", "timestamp"]
+    csv_header = ["id", "trajectory_id", "order", "state", "action", "next_state"]
     writer.writerow(csv_header)
-    for evaluation in Evaluation.objects.all():
-        writer.writerow(evaluation.to_list())
+    # for evaluation in Evaluation.objects.all():
+    #     writer.writerow(evaluation.to_list())
+    
+
+    for experience in Experience.objects.all():
+        writer.writerow(experience.to_list())
     return response

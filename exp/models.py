@@ -83,6 +83,8 @@ class Experience(models.Model):
     def to_dict(self):
         return {"id": self.id, "order":self.order, "state1": self.state, "actual_action": self.action, "next_state1": self.next_state}
 
+    def to_list(self):
+        return [self.id, self.trajectory.id, self.order, self.state, self.action, self.next_state]
 
 class Action(models.Model):
     play = models.ForeignKey('Play', on_delete=models.CASCADE)
