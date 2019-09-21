@@ -62,6 +62,7 @@ function click_play_button(event){
     trajectory_id = get_trajectory_id();
     if(trajectory_id == -1){
         playButton.textContent = "Complete";
+        window.location.href = '/exp/end';
     }else{
         event.target.style.display = 'none';
         getTrajectory(trajectory_id, start_replay);
@@ -110,7 +111,8 @@ function clickSend(e){
         trajectory_id = get_trajectory_id();
         postSubGoals(trajectory_id, Participant.sub_goals);
         window.sessionStorage.setItem(['trajectory_id'], [trajectory_id]);
-        alert("サブゴール情報を登録しました．");
+        confirm("この内容でサブゴール情報を登録しますか？");
+        write_console("サブゴール情報を登録しました．")
         next_task();
     }else{
         write_console("サブゴールは2箇所に設定してください．");

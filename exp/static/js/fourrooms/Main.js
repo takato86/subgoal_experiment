@@ -1,4 +1,5 @@
 const canvas = document.querySelector("#glcanvas");
+canvas.setAttribute('tabindex', 0);
 // canvas.width = screen.height / 2;
 // canvas.height = screen.height /2;
 var context = canvas.getContext("2d");

@@ -79,6 +79,9 @@ def render_start_page(request):
         form = UserForm()
     return render(request, 'exp/start.html', {'form' : form})
 
+def render_end_page(request):
+    return render(request, 'exp/end.html', {})
+
 def export_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="eval.csv"'

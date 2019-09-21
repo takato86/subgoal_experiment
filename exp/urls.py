@@ -13,4 +13,5 @@ urlpatterns = [
     path('exp/description', views.render_description, name='description'),
     path('exp/tasks/fourroom/trajectory/register', views.render_register_trajectory, name='register_trajectory'),
     path('exp/tasks/fourroom/decide_subgoals', views.render_decide_subgoals, name='decide_subgoals'),
+    path('exp/end', views.render_end_page, name='end_page'),
 ]

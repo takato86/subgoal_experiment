@@ -12,7 +12,7 @@ function clickStartButton(){
     init_variables();
     init_render();
     start();
-    document.addEventListener("keydown", act);
+    canvas.addEventListener("keydown", act, false);
     postTaskStart(Env.goal, alternative);
     // counterText.textContent = String(n_runs);
 }
@@ -50,7 +50,7 @@ function act(e){
         case 39: 
             play_step(3);
             break;
-        default: return;
+        default: break;
     }
     window.requestAnimationFrame(render_with_trajectory);
 }

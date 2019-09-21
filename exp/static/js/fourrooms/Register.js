@@ -5,6 +5,7 @@ Player.trajectory = [];
 reset_button.addEventListener("click", resetStart);
 register_button.addEventListener("click", register);
 
+
 function register(){
     if(Env.goal == Player.cur_state){
         postTrajectory(Player.n_steps, Env.goal, Player.trajectory);
@@ -12,7 +13,7 @@ function register(){
         init_variables();
         init_render();
         start();
-        document.addEventListener("keydown", act);
+        canvas.addEventListener("keydown", act, false);
         postTaskStart(Env.goal, alternative);
     }else{
         write_console("軌跡を登録できませんでした．");
@@ -33,7 +34,7 @@ function resetStart(){
         init_variables();
         init_render();
         start(start_state);
-        document.addEventListener("keydown", act);
+        canvas.addEventListener("keydown", act, false);
         write_console("スタート状態がセットされました．");
     }else{
         write_console("Start Stateが状態に含まれない値です．");
