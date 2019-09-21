@@ -95,6 +95,7 @@ function replay(trajectory, interval=1000){
             clearInterval(repeat);
             canvas.addEventListener("click", clickOnCanvas, false);
             completeButton.addEventListener("click", clickSend, false);
+            alert("サブゴールを２箇所選択してください．")
             render_trajectory(trajectory);
             return;
         }
