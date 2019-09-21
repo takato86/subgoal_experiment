@@ -28,10 +28,11 @@ function update_status(){
             }
         }
     }
+    change_play_button_display();
 }
 
 function get_trajectory_id(){
-    complete_trajectory_id = window.sessionStorage.getItem(['trajectory_id']);
+    const complete_trajectory_id = window.sessionStorage.getItem(['trajectory_id']);
     const trajectory_ids = document.getElementsByName("trajectory");
     if(complete_trajectory_id == null){
         return 1;
@@ -39,6 +40,14 @@ function get_trajectory_id(){
         return -1;
     }else{
         return parseInt(complete_trajectory_id) + 1;
+    }
+}
+
+function change_play_button_display(){
+    const complete_trajectory_id = window.sessionStorage.getItem(['trajectory_id']);
+    const trajectory_ids = document.getElementsByName("trajectory");
+    if(parseInt(complete_trajectory_id) == trajectory_ids.length){
+        playButton.textContent = "Complete";
     }
 }
 
@@ -61,7 +70,6 @@ function　start_replay(request){
 function click_play_button(event){
     trajectory_id = get_trajectory_id();
     if(trajectory_id == -1){
-        playButton.textContent = "Complete";
         window.location.href = '/exp/end';
     }else{
         event.target.style.display = 'none';
@@ -111,9 +119,11 @@ function clickSend(e){
         trajectory_id = get_trajectory_id();
         postSubGoals(trajectory_id, Participant.sub_goals);
         window.sessionStorage.setItem(['trajectory_id'], [trajectory_id]);
-        confirm("この内容でサブゴール情報を登録しますか？");
-        write_console("サブゴール情報を登録しました．")
-        next_task();
+        const result = confirm("この内容でサブゴール情報を登録しますか？");
+        if(result){
+            write_console("サブゴール情報を登録しました．");
+            next_task();
+        }
     }else{
         write_console("サブゴールは2箇所に設定してください．");
     }
@@ -121,9 +131,11 @@ function clickSend(e){
 
 function next_task(){
     playButton.style.display = 'block';
+    change_play_button_display();
     context.clearRect(0, 0, canvas.width, canvas.height);
     canvas.removeEventListener("click", clickOnCanvas, false);
     completeButton.removeEventListener("click", clickSend, false);
+    Participant.sub_goals = [];
     write_console("");
     update_status()
 }
