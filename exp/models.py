@@ -1,15 +1,22 @@
 from django.db import models
 from django.utils import timezone
 from django.core import validators
+from django.core.exceptions import ValidationError
+
+
+def validate_acceptance(value):
+    if value == 0:
+        raise ValidationError('同意いただけない場合は，問い合わせ先に連絡をしてください．', code="reject")
 
 
 class User(models.Model):
-    # age = models.PositiveSmallIntegerField(verbose_name='年齢', validators=[validators.MinValueValidator(1, message='年齢は1以上で入力してください',), validators.MaxValueValidator(120)])
     # mail = models.EmailField(verbose_name="メールアドレス")
-    # SEX_CHOICES = ((0, '男性'), (1, '女性'), (2, '答えたくない'))
-    # sex = models.IntegerField(verbose_name='性別', choices = SEX_CHOICES, default=0)
-    name = models.CharField(max_length=127)
-    is_acceptance = models.BooleanField()
+    name = models.CharField(verbose_name='氏名', max_length=127)
+    age = models.PositiveSmallIntegerField(verbose_name='年齢', validators=[validators.MinValueValidator(1, message='年齢は1以上で入力してください',), validators.MaxValueValidator(120)], default=20)
+    SEX_CHOICES = ((0, '男性'), (1, '女性'), (2, '答えたくない'))
+    sex = models.IntegerField(verbose_name='性別', choices = SEX_CHOICES, default=0)
+    ACCEPTANCE_CHOICES = ((0, '同意しません'), (1, '同意します'))
+    is_acceptance = models.IntegerField(verbose_name='同意', choices=ACCEPTANCE_CHOICES, default=0, validators=[validate_acceptance])
     created_datetime = models.DateTimeField(default=timezone.now)
 
 class Task(models.Model):
@@ -47,7 +54,7 @@ class Play(models.Model):
         self.task = task_id
         self.user = user
         self.goal = goal
-        self.task_type = task_type
+        self.taskあtype = task_type
         self.is_goal = False
         self.n_steps = 0
         self.start_datetime = timezone.now()

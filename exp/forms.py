@@ -5,11 +5,8 @@ from .models import User
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('name', 'is_acceptance')
+        fields = ('age', 'sex', 'name', 'is_acceptance')
         widgets = {
-            'acceptance': forms.RadioSelect(),
+            'sex': forms.RadioSelect(),
+            'is_acceptance': forms.RadioSelect(),
         }
-        # fields = ('age', 'mail', 'sex')
-        # widgets = {
-        #     'sex': forms.RadioSelect(),
-        # }

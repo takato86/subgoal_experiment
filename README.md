@@ -26,6 +26,12 @@ python manage.py shell
 ### 軌跡の登録
 "exp/tasks/fourroom/trajectory/register"へアクセス．
 
+### Cloud SQL Proxy
+[Docs](https://cloud.google.com/sql/docs/mysql/sql-proxy?hl=ja)
+```
+./cloud_sql_proxy -instances=quickstart-1561692856354:asia-east1:subgoal-experiment-instance=tcp:3306
+```
+
 
 ## Google App Engineへのデプロイ
 ```

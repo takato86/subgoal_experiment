@@ -8,23 +8,19 @@ from .models import Play, Task, User, Evaluation, Trajectory, Experience
 import csv
 
 def render_description(request):
-    messages = []
+    # messages = []
     if request.method == 'POST':
-        acceptance = int(request.POST.get("acceptance"))
-        name = request.POST.get("full_name")
-        if acceptance == 1 and len(name) > 0:
-            created_date = timezone.now()
-            user = User(name=name, is_acceptance=acceptance, created_datetime=created_date)
-            user.save()
+        form = UserForm(request.POST)
+        acceptance = int(request.POST.get("is_acceptance"))
+        if form.is_valid():
+            # import pdb; pdb.set_trace()
+            user = form.save()
             response = HttpResponseRedirect('./exp/tasks/fourroom/play/description')
             set_cookie(response, 'user_id', user.id, 365*24*60*60)
             return response
-        else:
-            if len(name) == 0:
-                messages.append("必要な情報を入力してください．")
-            if acceptance == 0:
-                messages.append("同意いただけない場合は，問い合わせ先に連絡をしてください．")
-    return render(request, 'exp/description.html', {"messages":messages})
+    else:
+        form = UserForm()
+    return render(request, 'exp/description.html', {"form":form})
 
 def render_play_description(request):
     return render(request, 'exp/tasks/fourrooms/play_description.html', {})

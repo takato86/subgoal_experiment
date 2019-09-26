@@ -15,6 +15,7 @@ window.addEventListener("load", update_status);
 
 
 function update_status(){
+    // 完了している軌跡にチェックを入れる
     const check_icon = '<span class="uk-margin-small-right" uk-icon="check"></span>';
     let trajectory_ids = document.getElementsByName("trajectory");
     let trajectory_id, existing_text, complete_trajectory_id;
@@ -32,6 +33,7 @@ function update_status(){
 }
 
 function get_trajectory_id(){
+    // 未完了の軌跡IDを取得する．
     const complete_trajectory_id = window.sessionStorage.getItem(['trajectory_id']);
     const trajectory_ids = document.getElementsByName("trajectory");
     if(complete_trajectory_id == null){
@@ -44,6 +46,7 @@ function get_trajectory_id(){
 }
 
 function change_play_button_display(){
+    // 全ての軌跡が完了していれば，Startの文字をCompleteに変える
     const complete_trajectory_id = window.sessionStorage.getItem(['trajectory_id']);
     const trajectory_ids = document.getElementsByName("trajectory");
     if(parseInt(complete_trajectory_id) == trajectory_ids.length){
@@ -60,7 +63,7 @@ function　start_replay(request){
     // 再生開始
     init_replay(trajectory[0]["state1"]);
     if(Env.task_id==1){
-        replay(trajectory, 1000);
+        replay(trajectory, 130);
     }
     if(Env.task_id==2){
         replay(trajectory, 50);
@@ -68,11 +71,22 @@ function　start_replay(request){
 }
 
 function click_play_button(event){
+    // playボタンを押す場合．
     trajectory_id = get_trajectory_id();
     if(trajectory_id == -1){
         window.location.href = '/exp/end';
     }else{
         event.target.style.display = 'none';
+        getTrajectory(trajectory_id, start_replay);
+    }
+}
+
+function play(){
+    // playボタンがない場合．
+    trajectory_id = get_trajectory_id();
+    if(trajectory_id == -1){
+        window.location.href = '/exp/end';
+    }else{
         getTrajectory(trajectory_id, start_replay);
     }
 }
@@ -123,7 +137,9 @@ function clickSend(e){
         const result = confirm("この内容でサブゴール情報を登録しますか？");
         if(result){
             write_console("サブゴール情報を登録しました．");
-            next_task();
+            // next_task();
+            // click_play_button() //サブゴール教示ごとにplayボタンを押す場合はこちら
+            play()
         }
     }else{
         write_console("サブゴールは2箇所に設定してください．");
