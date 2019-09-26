@@ -1,3 +1,7 @@
+## 概要
+サブゴール知識転移の強化学習のサブゴール取得用のWebシステム
+
+## コマンド
 起動
 ```
 python manage.py runserver
@@ -16,4 +20,14 @@ python manage.py makemigrations <app name>
 シェルで入る(Pythonコマンドを打ち込める。)
 ```
 python manage.py shell
+```
+
+## 手順
+### 軌跡の登録
+"exp/tasks/fourroom/trajectory/register"へアクセス．
+
+
+## Google App Engineへのデプロイ
+```
+gcloud app deploy
 ```
