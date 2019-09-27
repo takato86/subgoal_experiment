@@ -1,11 +1,16 @@
-function postTaskStart(user_id, task_id, goal_state, task_type, callback){
+Env.task_info = document.getElementById("task")
+Env.task_id = parseInt(Env.task_info.dataset.taskid);
+Env.user_id = -1;
+Env.task_type = Env.task_info.dataset.tasktype;
+
+function postTaskStart(goal_state, callback){
     // Returns: play_id
     const request = new XMLHttpRequest();
     let data = {
-        "user_id": user_id,
-        "task_id": task_id,
+        "user_id": Env.user_id,
+        "task_id": Env.task_id,
         "goal": goal_state,
-        "task_type": task_type,
+        "task_type": Env.task_type,
     };
     request.responseType = "json"
     request.open('POST', '/api/v1/plays/start');
@@ -15,7 +20,7 @@ function postTaskStart(user_id, task_id, goal_state, task_type, callback){
     request.addEventListener("load", (event)=>{
         if(event.target.status == 200){
             const json = request.response;
-            play_id = json.play_id
+            Env.play_id = json.play_id
             callback()
         }
         if(event.target.status != 200){
@@ -26,7 +31,7 @@ function postTaskStart(user_id, task_id, goal_state, task_type, callback){
         console.log(event.target.responseType);
         console.log(event.target.text);
     });
-    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(JSON.stringify(data));
 }
@@ -60,8 +65,35 @@ function postActionLog(play_id, state1, state2, state3, state4, actual_action, i
             return
         }
     });
-    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
     request.setRequestHeader('Content-Type', 'application/json');
+    request.send(JSON.stringify(data));
+}
+
+function postTrajectory(n_steps, goal, trajectory){
+    const request = new XMLHttpRequest();
+    // Trajectory: [{"state", "action", "next_state"}]
+    const data = {
+        "task_id" : Env.task_id,
+        "task_type": Env.task_type,
+        "n_steps": n_steps,
+        "goal": goal,
+        "trajectory": trajectory
+    };
+    request.open("POST", "/api/v1/trajectories/register");
+    request.addEventListener("error", ()=>{
+        console.log("Network Error!")
+    });
+    request.addEventListener("load", (event)=>{
+        if(event.target.status != 200){
+            console.log(`Error: ${event.target.status}`);
+            return
+        }
+        console.log(event.target.status);
+        console.log(event.target.responseText);
+    });
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
+    request.setRequestHeader("Content-Type", "application/json")
     request.send(JSON.stringify(data));
 }
 
@@ -84,7 +116,7 @@ function postEvalLog(play_id, action_id, eval){
         console.log(event.target.status);
         console.log(event.target.responseText);
     });
-    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
     request.setRequestHeader("Content-Type", "application/json")
     request.send(JSON.stringify(data));
 }
@@ -109,15 +141,56 @@ function postTaskFinish(play_id, n_steps, is_goal){
         }
 
     });
-    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
     request.setRequestHeader('Content-Type', 'application/json')
     request.send(JSON.stringify(data));
+}
+
+function postSubGoals(trajectory_id, subgoals){
+    const request = new XMLHttpRequest();
+    let data = {"subgoals":[]}
+    for(let i=0; i<subgoals.length; i++){
+        data["subgoals"].push({"trajectory_id": trajectory_id, "user_id": Env.user_id, "state": subgoals[i]})
+    }
+    request.open("POST", "/api/v1/subgoals");
+    request.addEventListener("error", ()=>{
+        console.log("Network Error!")
+    });
+    request.addEventListener("load", (event)=>{
+        if(event.target.status != 200){
+            console.log(`Error: ${event.target.status}`);
+            return
+        }
+        console.log(event.target.status);
+        console.log(event.target.responseText);
+    });
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
+    request.setRequestHeader("Content-Type", "application/json")
+    request.send(JSON.stringify(data));
+}
+
+function getTrajectory(trajectory_id, callback){
+    const request = new XMLHttpRequest();
+    let param = "trajectory_id="+trajectory_id;
+    request.responseType = "json";
+    request.open("GET", '/api/v1/trajectories?'+param);
+    request.addEventListener("error", ()=>{
+        console.log("Network Error!")
+    });
+    request.addEventListener("load", (event)=>{
+        console.log(event.target.status);
+        if(event.target.status == 200){
+            callback(request);
+        }
+    });
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
+    request.send();
 }
 
 function getActionHistory(given_play_id){
     const request = new XMLHttpRequest();
     let param = "play_id="+given_play_id
-    request.responseType = "json"
+    request.responseType = "json";
     request.open("GET", '/api/v1/action_history?'+param);
     request.addEventListener("error", ()=>{
         console.log("Network Error!")
@@ -126,17 +199,17 @@ function getActionHistory(given_play_id){
         console.log(event.target.status);
         if(event.target.status == 200){
             const json = request.response;
-            history = json.action_history;
-            goal = json.goal;
+            Player.history = json.action_history;
+            Env.clickable_states = json.action_history.map(x=>x['state1']);
+            Env.goal = json.goal;
             // 再生開始
-            init_replay();
-            if(task_id==1){
-                replay(1000);
+            init_replay(restore_state(Player.history[0]));
+            if(Env.task_id==1){
+                replay(Player.history, 1000);
             }
-            if(task_id==2){
-                replay(50);
+            if(Env.task_id==2){
+                replay(Player.history, 50);
             }
-            
         }
         if(event.target.status != 200){
             console.log(`Error: ${event.target.status}`);
@@ -145,6 +218,6 @@ function getActionHistory(given_play_id){
         }
         
     });
-    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
     request.send();
 }

@@ -1,21 +1,95 @@
 {% extends 'exp/base.html' %}
 {% load static %}
 {% block content %}
+{% load widget_tweaks %}
 <h2><span class="uk-text-background"></span></h2>
 <div class="uk-section uk-section-default">
-    <div class="uk-container">
-        <h3>実験説明</h3>
-        <div class="uk-grid-match uk-child-width-1-2@m" ukgrid>
-            <div>
-                <p>本実験は人（参加者）が設定するサブゴールを取得する実験です．ここでサブゴールとは，ある問題を解くためのキーポイントとなる状態のことを指します．例えば，＜例＞．</p>
-            </div>
-            <div>
-                <p>実験の流れは，はじめに迷路タスクを解いていただきます．その後，参加者の解き方をリプレイするので，そのリプレイを見てサブゴールを選択していただきます．</p>
-            </div>
+    {% if form.is_acceptance.errors %}
+        {% for error in form.is_acceptance.errors %}
+        <div class="uk-alert-warning" uk-alert>
+            <!-- <button type="button" uk-close></button> -->
+            <a class="uk-alert-close" uk-close></a>
+            <p>{{ error }}</p>
+        </div>
+    {% endfor %}
+    {% endif %}
+    <div class="uk-container uk-container-large">
+        <div class='uk-margin'>
+            <h2 class="uk-heading-line"><span>実験説明</span></h2>
+            本実験は，総合研究大学院大学の奥戸嵩登が実施するものです．本実験は「強化学習における人間のサブゴール知識転移」についてのものです．実験の時間は，全体で10分程度を予定しています．
+            提示されるスタートからゴールへの行き方（軌跡）を観察して，サブゴール（中継地点）を設定するタスクに取り組んでいただきます．
+            すべてのデータは，webブラウザを通して自動的に取得されます．また，参加者に対して，身体的・精神的苦痛をかけることはないよう，さらに参加者の名誉や人格の侵害にならように十分に配慮いたします．
         </div>
     </div>
-    <div class="uk-container">  
-            <a class='uk-button uk-button-default' href="{% url 'play_fourroom_description' %}">次へ</a>
+    <div class="uk-container uk-container-large">
+        <form action="" method="post">
+        {% csrf_token %}
+            <div class='uk-margin'>
+                <h2 class="uk-heading-line"><span>同意事項</span></h2>
+                <p>
+                        私は，「強化学習における人間のサブゴール知識転移」の研究について，目的・方法・予測される問題等について実験者より説明文書を用いて十分な説明を受け，本実験に関する以下の項目を了解しました．
+                </p>
+                <ul class="uk-list uk-list-bullet uk-margin-top">
+                    <li>研究内容について．</li>
+                    <li>参加者に対して身体的・精神的苦痛を与えないこと．</li>
+                    <li>自らの自由意思でいつでも実験を中止できること．</li>
+                    <li>いかなる時点において実験参加の拒否をしても何ら不利益を被らないこと．</li>
+                    <li>被験者の名誉や人格の侵害にならないこと．</li>
+                    <li>実験で得られたデータは，委託元に受け渡され，個人が特定できない形の統計情報として，論文，学会発表で用いられる場合があること．</li>
+                    <li>万一不利益を被った場合には，当該ネット調査会社に対して申し立てを行うことができること．</li>
+                </ul>
+                <p>
+                        以上をふまえて自らの意思により，「強化学習における人間のサブゴール知識転移」の実験の参加者になることに同意しますか？                    
+                </p>
+            </div>
+            {{form.non_field_errors}}
+            <div class="uk-margin uk-child-width-auto uk-grid">
+                {{form.is_acceptance.0}}
+                {{form.is_acceptance.1}}
+                <!-- <label><input class="uk-radio" type="radio" name="acceptance" value=1> 同意します．</label>
+                <label><input class="uk-radio" type="radio" name="acceptance" value=0 checked> 同意しません．</label> -->
+            </div>
+            <div class='uk-margin'>
+                <p><a href="http://www.ymd.nii.ac.jp/lab/seiji/">【本件問い合わせ先】</a></p>
+            </div>
+            <h2 class="uk-heading-line"><span>ユーザ情報</span></h2>
+            <div class='uk-margin'>
+                {% for error in form.name.errors %}
+                    <div class="uk-alert-error" uk-alert>
+                        <a class="uk-alert-close" uk-close></a>
+                        <p>{{ error }}</p>
+                    </div>
+                {% endfor %}
+                {{form.name|add_label_class:'uk-form-label'}}
+                {{form.name|add_class:"uk-input"}}
+            </div>
+            <div class='uk-margin'>
+                {% for error in form.age.errors %}
+                    <div class="uk-alert-error" uk-alert>
+                        <a class="uk-alert-close" uk-close></a>
+                        <p>{{ error }}</p>
+                    </div>
+                {% endfor %}
+                {{form.age|add_label_class:'uk-form-label'}}
+                {{form.age|add_class:'uk-select'}}
+            </div>
+            <div class='uk-margin'>
+                {% for error in form.name.errors %}
+                    <div class="uk-alert-error" uk-alert>
+                        <a class="uk-alert-close" uk-close></a>
+                        <p>{{ error }}</p>
+                    </div>
+                {% endfor %}
+                {{form.sex|add_label_class:'uk-form-label'}}
+                {% for sex_type in form.sex %}
+                    {{sex_type}}
+                {% endfor %}
+            </div>
+            <div class='uk-margin'>
+                <input type="submit" class='uk-button uk-button-default' value="送信">
+                    <!-- <a class='uk-button uk-button-default' href="{% url 'play_fourroom_description' %}">次へ</a> -->
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

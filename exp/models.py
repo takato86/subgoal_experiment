@@ -1,12 +1,22 @@
 from django.db import models
 from django.utils import timezone
 from django.core import validators
+from django.core.exceptions import ValidationError
+
+
+def validate_acceptance(value):
+    if value == 0:
+        raise ValidationError('同意いただけない場合は，問い合わせ先に連絡をしてください．', code="reject")
+
 
 class User(models.Model):
-    age = models.PositiveSmallIntegerField(verbose_name='年齢', validators=[validators.MinValueValidator(1, message='年齢は1以上で入力してください',), validators.MaxValueValidator(120)])
-    mail = models.EmailField(verbose_name="メールアドレス")
+    # mail = models.EmailField(verbose_name="メールアドレス")
+    name = models.CharField(verbose_name='氏名', max_length=127)
+    age = models.PositiveSmallIntegerField(verbose_name='年齢', validators=[validators.MinValueValidator(1, message='年齢は1以上で入力してください',), validators.MaxValueValidator(120)], default=20)
     SEX_CHOICES = ((0, '男性'), (1, '女性'), (2, '答えたくない'))
     sex = models.IntegerField(verbose_name='性別', choices = SEX_CHOICES, default=0)
+    ACCEPTANCE_CHOICES = ((0, '同意しません'), (1, '同意します'))
+    is_acceptance = models.IntegerField(verbose_name='同意', choices=ACCEPTANCE_CHOICES, default=0, validators=[validate_acceptance])
     created_datetime = models.DateTimeField(default=timezone.now)
 
 class Task(models.Model):
@@ -27,8 +37,10 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
+
 class Play(models.Model):
-    task = models.ForeignKey('Task', on_delete=models.CASCADE)
+    # task = models.ForeignKey('Task', on_delete=models.CASCADE)
+    task = models.IntegerField(null=False, blank=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     n_steps = models.IntegerField(null=True, blank=True)
     goal = models.IntegerField()
@@ -38,12 +50,11 @@ class Play(models.Model):
     end_datetime = models.DateTimeField(blank=True, null=True)
 
     def start(self, task_id:int , user_id:int , goal:int , task_type: str="exp_play"):
-        task = Task.objects.get(id=task_id)
         user = User.objects.get(id=user_id)
-        self.task = task
+        self.task = task_id
         self.user = user
         self.goal = goal
-        self.task_type = task_type
+        self.taskあtype = task_type
         self.is_goal = False
         self.n_steps = 0
         self.start_datetime = timezone.now()
@@ -55,6 +66,32 @@ class Play(models.Model):
         self.is_goal = is_goal
         self.end_datetime = timezone.now()
         self.save()
+
+
+class Trajectory(models.Model):
+    task = models.IntegerField(null=False, blank=False)
+    n_steps = models.IntegerField(null=True, blank=True)
+    goal = models.IntegerField()
+    task_type = models.CharField(max_length=100)
+    registered_datetime = models.DateTimeField(default=timezone.now)
+
+    def register(self):
+        self.registered_datetime = timezone.now()
+        self.save()
+
+
+class Experience(models.Model):
+    trajectory = models.ForeignKey('Trajectory', on_delete=models.CASCADE)
+    order = models.IntegerField()
+    state = models.IntegerField()
+    action = models.IntegerField()
+    next_state = models.IntegerField()
+
+    def to_dict(self):
+        return {"id": self.id, "order":self.order, "state1": self.state, "actual_action": self.action, "next_state1": self.next_state}
+
+    def to_list(self):
+        return [self.id, self.trajectory.id, self.order, self.state, self.action, self.next_state]
 
 class Action(models.Model):
     play = models.ForeignKey('Play', on_delete=models.CASCADE)
@@ -81,4 +118,15 @@ class Evaluation(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     
     def to_list(self):
-        return [self.id, self.play.id, self.play.user.id, self.play.task.title, self.action.state1, self.action.state2, self.action.state3, self.action.state4, self.action.intent_action, self.action.actual_action, self.action.next_state1, self.action.next_state2, self.action.next_state3, self.action.next_state4, self.timestamp]
+        return [self.id, self.play.id, self.play.user.id, self.play.task, self.action.state1, self.action.state2, self.action.state3, self.action.state4, self.action.intent_action, self.action.actual_action, self.action.next_state1, self.action.next_state2, self.action.next_state3, self.action.next_state4, self.timestamp]
+
+
+class SubGoal(models.Model):
+    trajectory = models.ForeignKey('Trajectory', on_delete=models.CASCADE)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    state = models.FloatField()
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    def to_list(self):
+        return [self.id, self.trajectory.id, self.play.user.id, self.state]
+

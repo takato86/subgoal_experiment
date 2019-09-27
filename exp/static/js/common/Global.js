@@ -1,13 +1,14 @@
 // task _type = ["reha", "exp"]
-let play_id = -1;
-let task_info = document.getElementById("task")
-let task_id = parseInt(task_info.dataset.taskid);
-let user_id = -1;
-let task_type = task_info.dataset.tasktype;
-let host = location.hostname;
-let csrftoken = '';
-let n_steps = 0;
-let pre_state;
-let cur_state;
-let history;
+let Player = {}
+let Env = {}
+let Participant = {}
+Env.play_id = -1;
+Env.host = location.hostname;
+Env.csrftoken = '';
+Env.reward = 0;
+Player.n_steps = 0;
+Player.pre_state;
+Player.cur_state;
+Player.history;
+Player.pre_action;
 let repeat = function(){};

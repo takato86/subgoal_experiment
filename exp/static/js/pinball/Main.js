@@ -99,7 +99,6 @@ let ball;
 let counter = 0;
 let current_act = 4;
 let user_action = '';
-let reward = 0;
 
 document.body.addEventListener('keydown', e => {
     user_action = e.key;
@@ -115,10 +114,10 @@ window.addEventListener("beforeunload", setCookie);
 function step(action = 4){
     counter++;
     //TODO Random move
-    pre_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
-    reward = take_action(action);
-    cur_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
-    n_steps ++;
+    Player.pre_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
+    Env.reward = take_action(action);
+    Player.cur_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
+    Player.n_steps ++;
     if(terminal()){
         ball.pos_x = start_pos_x;
         ball.pos_y = start_pos_y;
@@ -204,11 +203,8 @@ function init_variables(){
 }
 
 function start(){
-    console.log(user_id);
-    console.log(task_type);
-    console.log(task_id);
     const cnt = 2;
-    n_steps = 0;
+    Player.n_steps = 0;
     let x_vertexes = [];
     let y_vertexes = [];
     for(cf of cfgs_array){
@@ -252,8 +248,8 @@ function start(){
     ball = new Ball(start_pos_x, start_pos_y, ball_rad);
     ball.xdot = 0;
     ball.ydot = 0;
-    pre_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
-    cur_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
+    Player.pre_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
+    Player.cur_state = [ball.pos_x, ball.pos_y, ball.xdot, ball.ydot];
     render();
 }
 

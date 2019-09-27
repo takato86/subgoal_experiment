@@ -1,7 +1,8 @@
 from django.shortcuts import render
 import json
 from django.http import HttpResponse
-from exp.models import Play, Action, Evaluation
+from exp.models import Play, Action, Evaluation, SubGoal,\
+                       Trajectory, Experience, User
 # Create your views here.
 
 def render_json_responce(request, data, status=None):
@@ -75,8 +76,50 @@ def get_action_history(request):
     data = {}
     play = Play.objects.get(id=play_id)
     action_history = []
-    
     for action in Action.objects.filter(play=play):
         action_history.append(action.to_dict())
     data = {'action_history' : action_history, 'goal':play.goal}
     return render_json_responce(request, data)
+
+def get_trajectory(request):
+    if 'trajectory_id' in request.GET:
+        trajectory_id = request.GET.get('trajectory_id')
+    trajectory = Trajectory.objects.get(id=trajectory_id)
+    data = {}
+    experiences = []
+    for experience in Experience.objects.filter(trajectory=trajectory):
+        experiences.append(experience.to_dict())
+    data = {'trajectory': experiences, 'goal':trajectory.goal}
+    return render_json_responce(request, data)
+
+def save_subgoals(request):
+    request_json = json.loads(request.body);
+    subgoals = request_json["subgoals"];
+    for subgoal in subgoals:
+        trajectory_id = subgoal["trajectory_id"];
+        trajectory = Trajectory.objects.get(id=trajectory_id);
+        user_id = subgoal["user_id"];
+        user = User.objects.get(id=user_id);
+        state = subgoal["state"];
+        subgoal = SubGoal.objects.create(trajectory=trajectory, user=user, state=state);
+        subgoal.save()
+    return render_json_responce(request, {})
+
+
+def register_trajectory(request):
+    request_json = json.loads(request.body)
+    task_id = request_json["task_id"];
+    task_type = request_json["task_type"];
+    n_steps = request_json["n_steps"];
+    goal = request_json["goal"];
+    experiences = request_json["trajectory"];
+    trajectory = Trajectory(task=task_id, n_steps=n_steps, goal=goal, task_type=task_type)
+    trajectory.save()
+    for order, experience_dict in enumerate(experiences):
+        order = order + 1
+        state = experience_dict["state1"]
+        action = experience_dict["actual_action"]
+        next_state = experience_dict["next_state1"]
+        experience = Experience(order=order, trajectory=trajectory, state=state, action=action, next_state=next_state)
+        experience.save()
+    return render_json_responce(request, {})

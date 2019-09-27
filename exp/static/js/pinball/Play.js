@@ -21,7 +21,7 @@ let loop = function(){
 function clickStartButton(){
     let startButton = document.getElementById('startButton');
     startButton.style.display = 'none';
-    postTaskStart(user_id, task_id, goal, task_type, loop);
+    postTaskStart(Env.goal, loop);
     // play idを得てから処理を進める処理
     init_variables();
     init_render();
@@ -30,11 +30,11 @@ function clickStartButton(){
 
 function play_step(action){
     let is_continue = step(action);
-    pre_states = arange_state(pre_state);
-    cur_states = arange_state(cur_state)
-    postActionLog(play_id, pre_states[0], pre_states[1], pre_states[2], pre_states[3], action, null, cur_states[0], cur_states[1], cur_states[2], cur_states[3],reward);
+    Player.pre_states = arange_state(Player.pre_state);
+    Player.cur_states = arange_state(Player.cur_state);
+    postActionLog(Env.play_id, Player.pre_states[0], Player.pre_states[1], Player.pre_states[2], Player.pre_states[3], action, null, Player.cur_states[0], Player.cur_states[1], Player.cur_states[2], Player.cur_states[3],Env.reward);
     if(!is_continue){
-        postTaskFinish(play_id, n_steps, true);
+        postTaskFinish(Env.play_id, Player.n_steps, true);
     }
     return is_continue;
 }

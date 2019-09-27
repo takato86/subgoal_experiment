@@ -1,17 +1,20 @@
+let startButton = document.getElementById('startButton');
 startButton.addEventListener("click",clickStartButton);
 let n_runs = 5;
-let counterText = document.getElementById('counter');
-counterText.textContent = String(n_runs);
+// let counterText = document.getElementById('counter');
+// counterText.textContent = String(n_runs);
+
+let alternative = function(){return}
 
 function clickStartButton(){
-    let startButton = document.getElementById('startButton');
     startButton.style.display = 'none';
     // play idを得てから処理を進める処理
     init_variables();
     init_render();
     start();
-    postTaskStart(user_id, task_id, goal, task_type, alternative);
-    counterText.textContent = String(n_runs);
+    canvas.addEventListener("keydown", act, false);
+    postTaskStart(Env.goal, alternative);
+    // counterText.textContent = String(n_runs);
 }
 
 function endTask(){
@@ -19,16 +22,21 @@ function endTask(){
     if(n_runs < 1){
         window.location.href = './reflection/description'
     }
-    postTaskFinish(play_id, n_steps, true);
-    let startButton = document.getElementById('startButton');
-    startButton.style.display = 'block';
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    postTaskFinish(Env.play_id, Player.n_steps, true);
+    // let startButton = document.getElementById('startButton');
+    // startButton.style.display = 'block';
+    // context.clearRect(0, 0, canvas.width, canvas.height);
+    document.removeEventListener("keydown", act);
+    render_trajectory(Player.trajectory);
 }
 
-let alternative = function(){return}
-
-document.onkeydown = function(e){
+// onKeyDown
+function act(e){
     console.log(e.keyCode);
+    if(e.preventDefault){
+        e.preventDefault();
+    }
+    e.returnValue = false;
     switch(e.keyCode){
         case 38: 
             play_step(0);
@@ -44,15 +52,18 @@ document.onkeydown = function(e){
             break;
         default: break;
     }
-    window.requestAnimationFrame(render);
+    window.requestAnimationFrame(render_with_trajectory);
 }
+
 
 function play_step(action){
     step(action);
-    pre_states = arange_state(pre_state);
-    cur_states = arange_state(cur_state)
-    postActionLog(play_id, pre_states[0], pre_states[1], pre_states[2], pre_states[3], action, null, cur_states[0], cur_states[1], cur_states[2], cur_states[3], reward);
-    if(cur_state == goal){
+    Player.pre_states = arange_state(Player.pre_state);
+    Player.cur_states = arange_state(Player.cur_state);
+    Player.trajectory.push({"state1":Player.pre_state, "actual_action":action, "next_state1":Player.cur_state})
+    postActionLog(Env.play_id, Player.pre_states[0], Player.pre_states[1], Player.pre_states[2], Player.pre_states[3], action, null, Player.cur_states[0], Player.cur_states[1], Player.cur_states[2], Player.cur_states[3], Env.reward);
+    if(Player.cur_state == Env.goal){
+        Player.pre_action = -1
         endTask();
     }
 }
