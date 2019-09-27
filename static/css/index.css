@@ -1,0 +1,63 @@
+html, body{
+    /* overflow: hidden; */
+}
+
+canvas{
+    /* width: 30vw;
+    height: 30vh; */
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.container{
+    display: flex;
+}
+
+.left{
+    float:left;
+    width: 20%;
+    padding: 2vh;
+    box-sizing: border-box;
+}
+
+.right{
+    /* display: inline-block; */
+    float:left;
+    width: 80%;
+    padding: 2vh;
+    box-sizing: border-box;
+}
+
+.controller{
+    position:absolute;
+    bottom: 30vh;
+    /* padding-bottom: 10px; */
+}
+
+#display{
+    height: 90vh;
+}
+
+#control{
+    height: 90vh;
+    position:relative; left:0px;
+}
+
+#experiment{
+    height: 90vh;
+}
+
+#foot{
+    clear: both;
+    height: 1vh
+}
+
+.task-block{
+    /* width: 50vw; */
+    height: 90vh;
+    margin:0 auto;
+    display:block;
+}
