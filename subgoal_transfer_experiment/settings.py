@@ -25,7 +25,7 @@ SECRET_KEY = 'hd@-hikc#_6bdeqgz^$@wgj%t&0a@u7%-b%gbujm)6%^xe%#5-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['quickstart-1561692856354.appspot.com', '*'] #ここのホスト名を追加
+ALLOWED_HOSTS = ['quickstart-1561692856354.appspot.com'] #ここのホスト名を追加
 
 
 # Application definition
@@ -83,8 +83,8 @@ WSGI_APPLICATION = 'subgoal_transfer_experiment.wsgi.application'
 #     }
 # }
 
-import pymysql  # noqa: 402
-pymysql.install_as_MySQLdb()
+# import pymysql  # noqa: 402
+# pymysql.install_as_MySQLdb()
 
 # [START db_setup]
 if os.getenv('GAE_APPLICATION', None):
@@ -107,18 +107,18 @@ else:
     #
     # See https://cloud.google.com/sql/docs/mysql-connect-proxy
     DATABASES = {
-        'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
         # 'default': {
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'HOST': '127.0.0.1',
-        # 'PORT': '3306',
-        # 'NAME': 'subgoal_experiment',
-        # 'USER': 'tokudo',
-        # 'PASSWORD': '09doTAKA10',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         # }
+        'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        'NAME': 'subgoal_experiment',
+        'USER': 'tokudo',
+        'PASSWORD': '09doTAKA10',
+        }
     }
 
 
