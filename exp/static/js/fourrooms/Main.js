@@ -47,13 +47,13 @@ function start(start_state=null){
         }while(Player.cur_state == Env.goal);    
     }
     [g_y, g_x] = tocell(Env.goal);
-    draw_cell_with_border(g_x, g_y, 'darkorange');
+    draw_cell_with_border_and_text(g_x, g_y, 'darkorange', 'G');
     
     Player.pre_state = Player.cur_state;
     Player.n_steps = 0;
     Player.pre_action = -1;
     [cur_y, cur_x] = tocell(Player.cur_state);
-    draw_cell_with_border(cur_x, cur_y, 'royalblue');
+    draw_cell_with_border_and_text(cur_x, cur_y, 'royalblue', 'S');
 }
 
 function draw_cell(pos_x, pos_y, color){
@@ -144,6 +144,11 @@ function render_with_trajectory(){
     }
 }
 
+function render_task(){
+
+}
+
+
 function init_variables(){
     const layout = `wwwwwwwwwwwww
 w     w     w
@@ -199,6 +204,7 @@ wwwwwwwwwwwww`;
     // const init_state = arange_state.filter(n => n != goal);
 }
 
+
 function init_render() {
     // TODO canvasの大きさからcellの大きさを指定するように変更する。
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -218,6 +224,7 @@ function init_render() {
         }
     }
 }
+
 
 function render_trajectory(trajectory){
     let log, cell, state, actual_action, direction;
@@ -240,7 +247,3 @@ function render_trajectory(trajectory){
     }
 }
 
-function write_console(text){
-    let log_console = document.getElementById('log_console');
-    log_console.textContent = text;
-}

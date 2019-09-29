@@ -33,3 +33,16 @@ function restore_state(log){
                 console.error("null_counter value is invalid");
     }
 }
+
+function setCookie(key, value){
+    document.cookie = key + "="+encodeURIComponent(value);
+}
+
+function getCookie(){
+    let r = document.cookie.split(';');
+    let cookies = r.map(function(element, index, array){
+        let value = element.trim();
+        return value.split('=');
+    });
+    return cookies;
+}

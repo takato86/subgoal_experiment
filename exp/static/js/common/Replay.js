@@ -2,15 +2,12 @@
 Env.action_id;
 Env.clickable_states = []
 Participant.sub_goals = []
-let playButton = document.getElementById("playButton");
 let showed_array = [];
 
 // let rateHighButton = document.getElementById("rate-highly");
 // let rateLowerButton = document.getElementById("rate-lower");
-let completeButton = document.getElementById("complete_button");
 // rateHighButton.addEventListener("click", rateHighly);
 // rateLowerButton.addEventListener("click", rateLower);
-playButton.addEventListener("click", click_play_button, false);
 window.addEventListener("load", update_status);
 
 
@@ -32,6 +29,7 @@ function update_status(){
     change_play_button_display();
 }
 
+
 function get_trajectory_id(){
     // 未完了の軌跡IDを取得する．
     const complete_trajectory_id = window.sessionStorage.getItem(['trajectory_id']);
@@ -44,6 +42,7 @@ function get_trajectory_id(){
         return parseInt(complete_trajectory_id) + 1;
     }
 }
+
 
 function change_play_button_display(){
     // 全ての軌跡が完了していれば，Startの文字をCompleteに変える
@@ -67,17 +66,6 @@ function　start_replay(request){
     }
     if(Env.task_id==2){
         replay(trajectory, 50);
-    }
-}
-
-function click_play_button(event){
-    // playボタンを押す場合．
-    trajectory_id = get_trajectory_id();
-    if(trajectory_id == -1){
-        window.location.href = '/exp/end';
-    }else{
-        event.target.style.display = 'none';
-        getTrajectory(trajectory_id, start_replay);
     }
 }
 
@@ -129,24 +117,6 @@ function rateLower(){
     postEvalLog(Env.play_id, Env.action_id, -1);
 }
 
-function clickSend(e){
-    if(Participant.sub_goals.length == 2){
-        trajectory_id = get_trajectory_id();
-        postSubGoals(trajectory_id, Participant.sub_goals);
-        window.sessionStorage.setItem(['trajectory_id'], [trajectory_id]);
-        const result = confirm("この内容でサブゴール情報を登録しますか？");
-        if(result){
-            write_console("サブゴール情報を登録しました．");
-            // next_task();
-            update_status()
-            // click_play_button() //サブゴール教示ごとにplayボタンを押す場合はこちら
-            play()
-        }
-    }else{
-        write_console("サブゴールは2箇所に設定してください．");
-    }
-}
-
 function next_task(){
     playButton.style.display = 'block';
     change_play_button_display();
@@ -156,32 +126,3 @@ function next_task(){
     Participant.sub_goals = [];
     write_console("");
 }
-
-function clickOnCanvas(e){
-    let rect = e.target.getBoundingClientRect();
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
-    let cell_x = Math.floor(x / cell_width);
-    let cell_y = Math.floor(y / cell_height);
-    const state = tostate[cell_y][cell_x];
-    // 軌跡の上でないといけない。
-    // 一度クリックした状態をクリックすると白くなる。
-    const history_index = Env.clickable_states.indexOf(state);
-    if(history_index > 0){
-        const subgoal_index = Participant.sub_goals.indexOf(state);
-        if(subgoal_index >= 0){
-            Participant.sub_goals.splice(subgoal_index, 1);
-            const actual_action = Player.action_history[history_index]["actual_action"];
-            const direction = get_act_direct(parseInt(actual_action));
-            draw_cell_with_border_and_text(cell_x, cell_y, 'lightgray', direction);
-        }else if(Participant.sub_goals.length < 2){
-            Participant.sub_goals.push(state);
-            draw_cell_with_border(cell_x, cell_y, "coral");
-        }
-    }
-}
-
-
-
-
-// init_play_buttons();

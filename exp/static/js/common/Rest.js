@@ -146,15 +146,18 @@ function postTaskFinish(play_id, n_steps, is_goal){
     request.send(JSON.stringify(data));
 }
 
-function postSubGoals(trajectory_id, subgoals){
+function postSubGoals(subgoals){
     const request = new XMLHttpRequest();
-    let data = {"subgoals":[]}
+    let data = {"subgoals":[],
+                "task_id": Env.task_id,
+                "user_id": Env.user_id,
+               };
     for(let i=0; i<subgoals.length; i++){
-        data["subgoals"].push({"trajectory_id": trajectory_id, "user_id": Env.user_id, "state": subgoals[i]})
+        data["subgoals"].push({"state": subgoals[i]});
     }
     request.open("POST", "/api/v1/subgoals");
     request.addEventListener("error", ()=>{
-        console.log("Network Error!")
+        console.log("Network Error!");
     });
     request.addEventListener("load", (event)=>{
         if(event.target.status != 200){
