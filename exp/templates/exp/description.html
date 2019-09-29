@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 {% load widget_tweaks %}
+<span id="task" data-taskid=1 data-tasktype="reha"></span>
 <h2><span class="uk-text-background"></span></h2>
 <div class="uk-section uk-section-default">
     {% if form.is_acceptance.errors %}
@@ -92,4 +93,5 @@
         </form>
     </div>
 </div>
+<script src="{% static 'js/common/Event.js'%}"></script>
 {% endblock %}

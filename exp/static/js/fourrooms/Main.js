@@ -18,9 +18,6 @@ const possible_next_goals = [68, 69, 70, 71, 72, 78, 79, 80, 81, 82, 88, 89, 90,
 const goal_change_freq = 1;
 // const init_state;
 
-window.addEventListener("load", getCookie);
-window.addEventListener("beforeunload", setCookie);
-
 // TODO Rewardの設定
 // 失敗の確率．
 

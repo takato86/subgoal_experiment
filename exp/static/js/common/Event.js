@@ -4,9 +4,9 @@ Env.user_id = -1;
 Env.task_type = Env.task_info.dataset.tasktype;
 
 function setCookie(){
-    document.cookie = "Env.user_id="+encodeURIComponent(Env.user_id);
-    document.cookie = "Env.task_id="+encodeURIComponent(Env.task_id);
-    document.cookie = "Env.task_type="+encodeURIComponent(Env.task_type);
+    document.cookie = "user_id="+encodeURIComponent(Env.user_id);
+    document.cookie = "task_id="+encodeURIComponent(Env.task_id);
+    document.cookie = "task_type="+encodeURIComponent(Env.task_type);
 }
 
 function getCookie(){
@@ -26,3 +26,6 @@ function getCookie(){
         }
     })
 }
+
+window.addEventListener("load", getCookie);
+window.addEventListener("beforeunload", setCookie);
