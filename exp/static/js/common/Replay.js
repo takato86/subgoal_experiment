@@ -138,6 +138,7 @@ function clickSend(e){
         if(result){
             write_console("サブゴール情報を登録しました．");
             // next_task();
+            update_status()
             // click_play_button() //サブゴール教示ごとにplayボタンを押す場合はこちら
             play()
         }
@@ -154,7 +155,6 @@ function next_task(){
     completeButton.removeEventListener("click", clickSend, false);
     Participant.sub_goals = [];
     write_console("");
-    update_status()
 }
 
 function clickOnCanvas(e){

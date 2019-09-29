@@ -187,6 +187,7 @@ function getTrajectory(trajectory_id, callback){
     request.send();
 }
 
+
 function getActionHistory(given_play_id){
     const request = new XMLHttpRequest();
     let param = "play_id="+given_play_id
