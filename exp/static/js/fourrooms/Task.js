@@ -3,7 +3,7 @@ let completeButton = document.getElementById("complete_button");
 playButton.addEventListener("click", click_play_button, false);
 
 Env.clickable_states = []
-Env.n_subgoals = 4;
+Env.n_subgoals = 2;
 Participant.sub_goals = []
 
 
