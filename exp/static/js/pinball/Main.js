@@ -108,9 +108,6 @@ document.body.addEventListener('keyup', e=>{
     user_action = '';
 });
 
-window.addEventListener("load", getCookie);
-window.addEventListener("beforeunload", setCookie);
-
 function step(action = 4){
     counter++;
     //TODO Random move

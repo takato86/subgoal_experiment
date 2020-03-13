@@ -94,17 +94,15 @@ def get_trajectory(request):
 
 def save_subgoals(request):
     request_json = json.loads(request.body);
-    subgoals = request_json["subgoals"];
-    for subgoal in subgoals:
-        trajectory_id = subgoal["trajectory_id"];
-        trajectory = Trajectory.objects.get(id=trajectory_id);
-        user_id = subgoal["user_id"];
-        user = User.objects.get(id=user_id);
-        state = subgoal["state"];
-        subgoal = SubGoal.objects.create(trajectory=trajectory, user=user, state=state);
+    contents = request_json["subgoals"];
+    user_id = request_json["user_id"];
+    user = User.objects.get(id=user_id);
+    task = request_json["task_id"]
+    for content in contents:
+        state = content["state"];
+        subgoal = SubGoal.objects.create(user=user, task=task, state=state);
         subgoal.save()
     return render_json_responce(request, {})
-
 
 def register_trajectory(request):
     request_json = json.loads(request.body)

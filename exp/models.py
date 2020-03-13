@@ -122,11 +122,10 @@ class Evaluation(models.Model):
 
 
 class SubGoal(models.Model):
-    trajectory = models.ForeignKey('Trajectory', on_delete=models.CASCADE)
+    task = models.IntegerField(null=False, blank=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     state = models.FloatField()
     timestamp = models.DateTimeField(default=timezone.now)
-
     def to_list(self):
-        return [self.id, self.trajectory.id, self.play.user.id, self.state]
+        return [self.id, self.task, self.user.id, self.state]
 
