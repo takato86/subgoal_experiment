@@ -27,6 +27,7 @@ function tocell(state){
 }
 
 function start(start_state=null){
+    let s_y, s_x, g_y, g_x;
     if(start_state != null){
         Env.start = start_state;
     }else{
@@ -36,7 +37,7 @@ function start(start_state=null){
              Env.start = Math.floor(Math.random() * n_states);
         }while(Env.start == Env.goal);    
     }
-    [s_y, s_x] = tocell(Env.start)
+    [s_y, s_x] = tocell(Env.start);
     [g_y, g_x] = tocell(Env.goal);
     draw_cell_with_border_and_text(g_x, g_y, 'darkorange', 'G');
     draw_cell_with_border_and_text(s_x, s_y, 'royalblue', 'S');
