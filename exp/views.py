@@ -15,7 +15,7 @@ def render_description(request):
         if form.is_valid():
             # import pdb; pdb.set_trace()
             user = form.save()
-            response = HttpResponseRedirect('./exp/tasks/fourroom/play/description')
+            response = HttpResponseRedirect('/exp/tasks/fourroom/play/description')
             set_cookie(response, 'user_id', user.id, 365*24*60*60)
             return response
     else:
@@ -24,25 +24,6 @@ def render_description(request):
 
 def render_play_description(request):
     return render(request, 'exp/tasks/fourrooms/play_description.html', {})
-
-def render_reflection_description(request):
-    return render(request, 'exp/tasks/fourrooms/ref_description.html', {})
-
-def render_fourroom(request):
-    return render(request, 'exp/tasks/fourrooms/fourroom.html', {})
-
-def render_register_trajectory(request):
-    return render(request, 'exp/tasks/fourrooms/register.html', {})
-
-def render_fourroom_reflection(request):
-    # user_idとtask_type，taskが必要←requestに含まれる必要．
-    user_id = request.COOKIES['user_id']
-    task_type = request.COOKIES['task_type']
-    task_id = request.COOKIES['task_id']
-    user = User.objects.get(id=user_id)
-    task = task_id
-    play_ids = Play.objects.filter(user=user, task=task, task_type=task_type).values('id')
-    return render(request, 'exp/tasks/fourrooms/fourroom_ref.html', {'play_ids':play_ids})
 
 def render_pinball_reflection(request):
     user_id = request.COOKIES['user_id']
@@ -55,8 +36,7 @@ def render_pinball_reflection(request):
 
 def render_decide_subgoals(request):
     task_id = request.COOKIES['task_id']
-    trajectory_ids = Trajectory.objects.filter(task=task_id).values("id")[:4]
-    return render(request, 'exp/tasks/fourrooms/decide_subgoals.html', {"trajectory_ids":trajectory_ids})
+    return render(request, 'exp/tasks/fourrooms/decide_subgoals.html')
 
 def render_pinball(request):
     return render(request, 'exp/tasks/pinball/pinball.html', {})

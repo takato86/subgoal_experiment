@@ -12,14 +12,9 @@ let cell_height = 40;
 let n_states = 0;
 Env.start = null;
 Env.goal = 62;
-Env.reward = 0;
-Player.action_space = [0,1,2,3]; //上下左右
 const possible_next_goals = [68, 69, 70, 71, 72, 78, 79, 80, 81, 82, 88, 89, 90, 91, 92, 93, 99, 100, 101, 102, 103];
 const goal_change_freq = 1;
-// const init_state;
 
-// TODO Rewardの設定
-// 失敗の確率．
 
 function tocell(state){
     for(let y=0; y < height; y++){
@@ -32,28 +27,19 @@ function tocell(state){
 }
 
 function start(start_state=null){
-    [cur_y, cur_x] = tocell(Player.cur_state);
-    draw_cell_with_border(cur_x, cur_y, 'white');
-
     if(start_state != null){
         Env.start = start_state;
-        Player.cur_state = start_state;
     }else{
         let g_index = Math.floor(Math.random() * possible_next_goals.length);
         Env.goal = possible_next_goals[g_index];
         do{
              Env.start = Math.floor(Math.random() * n_states);
-             Player.cur_state = Env.start;
-        }while(Player.cur_state == Env.goal);    
+        }while(Env.start == Env.goal);    
     }
+    [s_y, s_x] = tocell(Env.start)
     [g_y, g_x] = tocell(Env.goal);
     draw_cell_with_border_and_text(g_x, g_y, 'darkorange', 'G');
-    
-    Player.pre_state = Player.cur_state;
-    Player.n_steps = 0;
-    Player.pre_action = -1;
-    [cur_y, cur_x] = tocell(Player.cur_state);
-    draw_cell_with_border_and_text(cur_x, cur_y, 'royalblue', 'S');
+    draw_cell_with_border_and_text(s_x, s_y, 'royalblue', 'S');
 }
 
 function draw_cell(pos_x, pos_y, color){
@@ -93,61 +79,6 @@ function get_act_direct(action){
         default: return " ";
     }
 }
-
-function step(action){
-    Player.pre_state = Player.cur_state;
-    Player.pre_action = action;
-    [cur_y, cur_x] = tocell(Player.cur_state);
-    [next_y, next_x] = [cur_y, cur_x];
-    switch(action){
-        case 0:  next_y--; break;
-        case 1:  next_y++; break;
-        case 2:  next_x--; break;
-        case 3:  next_x++; break;
-        default: break;
-    }
-    if(Env.occupancy[next_y][next_x] == 1){
-        next_y = cur_y;
-        next_x = cur_x;
-    }
-    Player.cur_state = tostate[next_y][next_x];
-    Player.n_steps++;
-}
-
-function render(){
-    // 軌跡の色塗りなし。
-    if(Player.cur_state != Env.goal){
-        [pre_y,pre_x] = tocell(Player.pre_state);
-        console.log('y:' + pre_y + ', x:' + pre_x);
-        draw_cell_with_border(pre_x, pre_y, 'white');
-        [cur_y, cur_x] = tocell(Player.cur_state);
-        draw_cell_with_border(cur_x, cur_y, 'royalblue');
-        console.log('y:' + cur_y + ', x:' + cur_x);
-    }else{
-        alert("Goal! The number of steps is "+Player.n_steps+".");
-        // start();
-    }
-}
-
-function render_with_trajectory(){
-    if(Player.cur_state != Env.goal){
-        [pre_y,pre_x] = tocell(Player.pre_state);
-        console.log('y:' + pre_y + ', x:' + pre_x);
-        const direction = get_act_direct(Player.pre_action);
-        draw_cell_with_border_and_text(pre_x, pre_y, 'lightgray', direction);
-        [cur_y, cur_x] = tocell(Player.cur_state);
-        draw_cell_with_border(cur_x, cur_y, 'royalblue');
-        console.log('y:' + cur_y + ', x:' + cur_x);
-    }else{
-        alert("Goal! The number of steps is "+Player.n_steps+".");
-        // start();
-    }
-}
-
-function render_task(){
-
-}
-
 
 function init_variables(){
     const layout = `wwwwwwwwwwwww
@@ -196,10 +127,6 @@ wwwwwwwwwwwww`;
     }
     cell_height = Math.floor(screen.height / 1.5 / height);
     cell_width = Math.floor(screen.height / 1.5 / width);
-    Player.pre_state = 0;
-    Player.cur_state = 0;
-    Player.pre_action = 0;
-    Player.trajectory = [];
     // const arange_state = createArangeArray(n_states);
     // const init_state = arange_state.filter(n => n != goal);
 }
@@ -225,25 +152,4 @@ function init_render() {
     }
 }
 
-
-function render_trajectory(trajectory){
-    let log, cell, state, actual_action, direction;
-    if(trajectory.length > 0){
-        init_render();
-        for(let i=0; i < trajectory.length; i++){
-            log = trajectory[i];
-            state = log["state1"];
-            actual_action = log["actual_action"];
-            cell = tocell(state);
-            direction = get_act_direct(parseInt(actual_action));
-            draw_cell_with_border_and_text(cell[1], cell[0], "lightgray", direction);
-        }
-        cell = tocell(Env.start)
-        draw_cell_with_border_and_text(cell[1], cell[0], "royalblue", "S");
-        cell = tocell(Env.goal)
-        draw_cell_with_border_and_text(cell[1], cell[0], "darkorange", "G");
-    }else{
-        console.log("History is null.");
-    }
-}
 

@@ -12,11 +12,6 @@
         </canvas>
     </div>
         <div class='uk-width-1-4' uk-grid>
-            {% for trajectory_id in trajectory_ids %}
-                <div class='uk-grid-small' name="trajectory" value="{{trajectory_id.id}}">
-                    Trajectory {{trajectory_id.id}}
-                </div>
-            {% endfor %}
             <div class='uk-grid-small'>
                 <button class="uk-button uk-button-secondary" id="complete_button">次へ</button>
             </div>
@@ -26,8 +21,6 @@
         </div>
     </div>
 </div>
-<script src="{% static 'js/common/Utils.js'%}"></script>
-<script src="{% static 'js/common/Rest.js'%}"></script>
-<script src="{% static 'js/fourrooms/Main.js' %}"></script>
-<script src="{% static 'js/fourrooms/Task.js' %}"></script>
+<script src="{% static 'js/fourrooms/common.js' %}"></script>
+<script src="{% static 'js/fourrooms/decide_subgoals.js' %}"></script>
 {% endblock %}

@@ -1,11 +1,16 @@
+let Participant = {
+    sub_goals: []
+}
 let playButton = document.getElementById("playButton");
 let completeButton = document.getElementById("complete_button");
-playButton.addEventListener("click", click_play_button, false);
 
 Env.clickable_states = []
 Env.n_subgoals = 2;
-Participant.sub_goals = []
+Env.task_info = document.getElementById("task")
+Env.task_id = parseInt(Env.task_info.dataset.taskid);
+Env.task_type = Env.task_info.dataset.tasktype;
 
+playButton.addEventListener("click", click_play_button, false);
 
 window.addEventListener("load", function(){
     const cookies = new Map(getCookie("complete_task"));
@@ -46,6 +51,34 @@ function click_play_button(event){
         canvas.addEventListener("click", clickOnCanvas, false);
     }
 }
+
+
+function postSubGoals(subgoals){
+    const request = new XMLHttpRequest();
+    let data = {"subgoals":[],
+                "task_id": Env.task_id,
+                "user_id": Env.user_id,
+               };
+    for(let i=0; i<subgoals.length; i++){
+        data["subgoals"].push({"state": subgoals[i]});
+    }
+    request.open("POST", "/api/v1/subgoals");
+    request.addEventListener("error", ()=>{
+        console.log("Network Error!");
+    });
+    request.addEventListener("load", (event)=>{
+        if(event.target.status != 200){
+            console.log(`Error: ${event.target.status}`);
+            return
+        }
+        console.log(event.target.status);
+        console.log(event.target.responseText);
+    });
+    request.setRequestHeader('X-CSRFToken', Env.csrftoken);
+    request.setRequestHeader("Content-Type", "application/json")
+    request.send(JSON.stringify(data));
+}
+
 
 function clickSend(e){
     if(Participant.sub_goals.length == Env.n_subgoals){

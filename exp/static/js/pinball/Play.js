@@ -18,6 +18,18 @@ let loop = function(){
     requestAnimationFrame(loop);
 }
 
+function arange_state(state){
+    if(state instanceof Array){
+        diff = 4 - state.length;
+        for(let i=0; i<diff; i++){
+            state.push(null);
+        }
+        return state
+    }else{
+        return [state, null, null, null];
+    }
+}
+
 function clickStartButton(){
     let startButton = document.getElementById('startButton');
     startButton.style.display = 'none';
