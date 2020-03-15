@@ -13,9 +13,6 @@ function getInfoCookie(){
     if(cookies.has("task_id")){
         Env.task_id = cookies.get("task_id");
     }
-    if(cookies.has("task_type")){
-        Env.task_type = cookies.get("task_type");
-    }
     if(cookies.has("csrftoken")){
         Env.csrftoken = cookies.get("csrftoken");
     }
@@ -24,7 +21,6 @@ function getInfoCookie(){
 function setInfoCookie(){
     setCookie("user_id", Env.user_id);
     setCookie("task_id", Env.task_id);
-    setCookie("task_type", Env.task_type);
 }
 
 function setCookie(key, value){

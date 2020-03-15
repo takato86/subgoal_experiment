@@ -8,7 +8,6 @@ Env.clickable_states = []
 Env.n_subgoals = 2;
 Env.task_info = document.getElementById("task")
 Env.task_id = parseInt(Env.task_info.dataset.taskid);
-Env.task_type = Env.task_info.dataset.tasktype;
 
 playButton.addEventListener("click", click_play_button, false);
 
@@ -46,7 +45,7 @@ function click_play_button(event){
         window.location.href = '/exp/end';
     }else{
         event.target.style.display = 'none';
-        init_task()
+        init_task();
         completeButton.addEventListener("click", clickSend, false);
         canvas.addEventListener("click", clickOnCanvas, false);
     }

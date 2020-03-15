@@ -136,8 +136,9 @@ wwwwwwwwwwwww`;
 function init_render() {
     // TODO canvasの大きさからcellの大きさを指定するように変更する。
     context.clearRect(0, 0, canvas.width, canvas.height);
-    canvas.height = 50 * height;
-    canvas.width = 50 * width;
+    canvas.height = cell_height * height;
+    canvas.width = cell_width * width;
+    console.log("set canvas size: (" + canvas.height + ", " + canvas.width+ ")");
     let x = 0;
     let y = 0;
     let fillStyle = ''
