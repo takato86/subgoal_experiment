@@ -3,11 +3,13 @@ from . import views
 
 urlpatterns = [
     path('', views.render_description, name='description'),
-    path('exp/tasks/fourroom/play/description', views.render_play_description, name='play_fourroom_description'),
-    path('exp/tasks/pinball/play', views.render_pinball, name='pinball'),
-    path('exp/tasks/pinball/reflection', views.render_pinball_reflection, name='pinball_reflection'),
+    path('exp/tasks/fourrooms/description', views.render_fourrooms_description,
+         name='fourrooms_description'),
+    path('exp/tasks/pinball/decide_subgoals', views.render_pinball_decide_subgoals,
+         name='pinball_decide_subgoals'),
     path('export_csv', views.export_csv, name='export_csv'),
     path('exp/description', views.render_description, name='description'),
-    path('exp/tasks/fourroom/decide_subgoals', views.render_decide_subgoals, name='decide_subgoals'),
+    path('exp/tasks/fourrooms/decide_subgoals', views.render_fourrooms_decide_subgoals,
+         name='fourrooms_decide_subgoals'),
     path('exp/end', views.render_end_page, name='end_page'),
 ]

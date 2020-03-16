@@ -15,31 +15,21 @@ def render_description(request):
         if form.is_valid():
             # import pdb; pdb.set_trace()
             user = form.save()
-            response = HttpResponseRedirect('/exp/tasks/fourroom/play/description')
+            response = HttpResponseRedirect('/exp/tasks/fourrooms/description')
             set_cookie(response, 'user_id', user.id, 365*24*60*60)
             return response
     else:
         form = UserForm()
     return render(request, 'exp/description.html', {"form":form})
 
-def render_play_description(request):
-    return render(request, 'exp/tasks/fourrooms/play_description.html', {})
+def render_fourrooms_description(request):
+    return render(request, 'exp/tasks/fourrooms/description.html', {})
 
-def render_pinball_reflection(request):
-    user_id = request.COOKIES['user_id']
-    task_type = request.COOKIES['task_type']
-    task_id = request.COOKIES['task_id']
-    user = User.objects.get(id=user_id)
-    task = task_id
-    play_ids = Play.objects.filter(user=user, task=task, task_type=task_type).values('id')[:3]
-    return render(request, 'exp/tasks/pinball/pinball_ref.html', {'play_ids':play_ids})
-
-def render_decide_subgoals(request):
-    task_id = request.COOKIES['task_id']
+def render_fourrooms_decide_subgoals(request):
     return render(request, 'exp/tasks/fourrooms/decide_subgoals.html')
 
-def render_pinball(request):
-    return render(request, 'exp/tasks/pinball/pinball.html', {})
+def render_pinball_decide_subgoals(request):
+    return render(request, 'exp/tasks/pinball/decide_subgoals.html', {})
 
 def render_start_page(request):
     if request.method == "POST":
@@ -64,10 +54,7 @@ def export_csv(request):
     writer = csv.writer(response)
     csv_header = ["id", "trajectory_id", "order", "state", "action", "next_state"]
     writer.writerow(csv_header)
-    # for evaluation in Evaluation.objects.all():
-    #     writer.writerow(evaluation.to_list())
     
-
     for experience in Experience.objects.all():
         writer.writerow(experience.to_list())
     return response

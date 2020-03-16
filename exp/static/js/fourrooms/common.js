@@ -3,15 +3,15 @@ canvas.setAttribute('tabindex', 0);
 // canvas.width = screen.height / 2;
 // canvas.height = screen.height /2;
 var context = canvas.getContext("2d");
-Env.occupancy = [];
+let Env = {
+    occupancy: []
+}
 let tostate = [];
 let height = 0;
 let width = 0;
 let cell_width = 40;
 let cell_height = 40;
 let n_states = 0;
-Env.start = null;
-Env.goal = 62;
 const possible_next_goals = [68, 69, 70, 71, 72, 78, 79, 80, 81, 82, 88, 89, 90, 91, 92, 93, 99, 100, 101, 102, 103];
 const goal_change_freq = 1;
 
@@ -24,23 +24,6 @@ function tocell(state){
             }
         }
     }
-}
-
-function start(start_state=null){
-    let s_y, s_x, g_y, g_x;
-    if(start_state != null){
-        Env.start = start_state;
-    }else{
-        let g_index = Math.floor(Math.random() * possible_next_goals.length);
-        Env.goal = possible_next_goals[g_index];
-        do{
-             Env.start = Math.floor(Math.random() * n_states);
-        }while(Env.start == Env.goal);    
-    }
-    [s_y, s_x] = tocell(Env.start);
-    [g_y, g_x] = tocell(Env.goal);
-    draw_cell_with_border_and_text(g_x, g_y, 'darkorange', 'G');
-    draw_cell_with_border_and_text(s_x, s_y, 'royalblue', 'S');
 }
 
 function draw_cell(pos_x, pos_y, color){

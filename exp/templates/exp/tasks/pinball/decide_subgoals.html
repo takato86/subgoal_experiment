@@ -1,7 +1,6 @@
 {% extends 'exp/base.html' %}
 {% load static %}
 {% block content %}
-<span id="task" data-taskid=2 data-tasktype="reha"></span>
 <div><h2>Task</h2></div>
 <div id='experiment'>
     <div class="task-block">
@@ -14,17 +13,9 @@
                     <code>&lt;canvas&gt;</code> 要素をサポートしていません。
                 </canvas>
             </div>
-            <div id='control'>
-                <h3>タスク説明</h3>
-            </div>
         </div>
     </div>
 </div>
-<script src="{% static 'js/common/Event.js'%}"></script>
-<script src="{% static 'js/common/Rest.js'%}"></script>
-<script src="{% static 'js/pinball/PinballObstacle.js' %}"></script>
-<script src="{% static 'js/pinball/Ball.js' %}"></script>
-<script src="{% static 'js/pinball/VectorUtils.js' %}"></script>
-<script src="{% static 'js/pinball/Main.js' %}"></script>
-<script src="{% static 'js/pinball/Play.js' %}"></script>
+<script src="{% static 'js/pinball/common.js' %}"></script>
+<script src="{% static 'js/pinball/decide_subgoals.js' %}"></script>
 {% endblock %}
