@@ -1,3 +1,19 @@
+class Subgoal{
+    constructor(pos_x, pos_y, rad){
+        this.pos_x = pos_x;
+        this.pos_y = pos_y;
+        this.rad = rad;
+    }
+    is_in(pos_x, pos_y, rad){
+        let distance = ((pos_x - this.pos_x)**2 + (pos_y - this.pos_y)**2) ** 0.5;
+        return (distance < this.rad);
+    }
+    to_dict(){
+        return {"x": this.pos_x, "y": this.pos_y, "rad": this.rad};
+    }
+}
+
+
 class Ball{
     constructor(pos_x, pos_y, rad){ 
         this.DRAG = 0.995;

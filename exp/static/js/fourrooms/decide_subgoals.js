@@ -1,4 +1,4 @@
-Participant.sub_goals = []
+Participant.subgoals = []
 Participant.task_id = 1
 let playButton = document.getElementById("playButton");
 let completeButton = document.getElementById("complete_button");
@@ -53,7 +53,6 @@ function start(start_state=null){
     draw_cell_with_border_and_text(s_x, s_y, 'royalblue', 'S');
 }
 
-
 function next_task(){
     playButton.style.display = 'block';
     canvas.removeEventListener("click", clickOnCanvas, false);
@@ -61,13 +60,13 @@ function next_task(){
     Participant.complete_task = is_finished()
     update_status();
     context.clearRect(0, 0, canvas.width, canvas.height);
-    Participant.sub_goals = [];
+    Participant.subgoals = [];
 }
 
 function click_play_button(event){
     // playボタンを押す場合．
     if(Participant.complete_task){
-        window.location.href = '/exp/end';
+        window.location.href = '/tasks/end';
     }else{
         event.target.style.display = 'none';
         init_task();
@@ -75,7 +74,6 @@ function click_play_button(event){
         canvas.addEventListener("click", clickOnCanvas, false);
     }
 }
-
 
 function postSubGoals(subgoals){
     const request = new XMLHttpRequest();
@@ -103,12 +101,11 @@ function postSubGoals(subgoals){
     request.send(JSON.stringify(data));
 }
 
-
 function clickSend(e){
-    if(Participant.sub_goals.length == Env.tasks[Participant.task_id].n_subgoals){
+    if(Participant.subgoals.length == Env.tasks[Participant.task_id].n_subgoals){
         const result = confirm("この内容でサブゴール情報を登録しますか？");
         if(result){
-            postSubGoals(Participant.sub_goals);
+            postSubGoals(Participant.subgoals);
             Participant.task_id += 1
             if(is_finished()){
                 setCookie("complete_task", Participant.complete_task);
@@ -131,7 +128,7 @@ function clickOnCanvas(e){
     let cell_x = Math.floor(x / cell_width);
     let cell_y = Math.floor(y / cell_height);
     const state = tostate[cell_y][cell_x];
-    const subgoal_index = Participant.sub_goals.indexOf(state);
+    const subgoal_index = Participant.subgoals.indexOf(state);
     if(state == Env.tasks[Participant.task_id].start){
         return;
     }else if(state == Env.tasks[Participant.task_id].goal){
@@ -140,10 +137,10 @@ function clickOnCanvas(e){
         return;
     }
     if(subgoal_index >= 0){
-        Participant.sub_goals.splice(subgoal_index, 1);
+        Participant.subgoals.splice(subgoal_index, 1);
         draw_cell_with_border(cell_x, cell_y, "white");
-    }else if(Participant.sub_goals.length < Env.tasks[Participant.task_id].n_subgoals){
-        Participant.sub_goals.push(state);
+    }else if(Participant.subgoals.length < Env.tasks[Participant.task_id].n_subgoals){
+        Participant.subgoals.push(state);
         draw_cell_with_border(cell_x, cell_y, "coral");
     }
 }

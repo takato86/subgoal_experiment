@@ -35,43 +35,103 @@ let Env = {
     ball_rad: 0,
     target_rad: 0,
     subgoal_rad: 0.04,
-    screen_width: window.innerWidth * 0.5,
-    screen_height: window.innerWidth * 0.5
+    screen_width: window.innerWidth * 0.35,
+    screen_height: window.innerWidth * 0.35
 }
-let processButton = document.querySelector('#startButton');
-Participant.sub_goals = [];
+window.addEventListener('load', start);
+let nextButton = document.querySelector('#next_button');
+nextButton.addEventListener('click', click_next);
+
+Participant.subgoals = [];
 Participant.task_id = 1;
 Participant.get_subgoal = (pos_x, pos_y, rad) => {
-    let distance = 0;
-    for(subgoal of Participant.sub_goals){
-        distance = ((pos_x - subgoal[0])**2 + (pos_y - subgoal[1])**2) ** 0.5;
-        if(distance < rad + Env.subgoal_rad){
+    for(subgoal of Participant.subgoals){
+        if(subgoal.is_in(pos_x, pos_y, rad)){
             return subgoal;
         }
     }
     return false;
 }
+Participant.to_dict = () => {
+    let dict = {};
+    dict.task_id = Participant.task_id;
+    dict.user_id = Participant.user_id;
+    dict.subgoals = []
+    for(subgoal of Participant.subgoals){
+        dict.subgoals.push(subgoal.to_dict());
+    }
+    return dict;
+}
 canvas.width = Env.screen_width;
 canvas.height = Env.screen_height;
 
 
-processButton.addEventListener('click', click_process);
-
-function click_process(event){
-    event.target.style.display = 'none';
+function start(event){
     init();
     render();
     canvas.addEventListener("click", click_on_canvas, false);
+}
+
+function click_next(event){
+    if(Participant.subgoals.length == Env.tasks[Participant.task_id].n_subgoals){
+        const result = confirm('この内容でサブゴール情報を登録しますか？');
+        if(result){
+            // post_subgoals();
+            next_task();
+        }else{
+            alert("サブゴールは" + Env.tasks[Participant.task_id].n_subgoals + "箇所に設定してください．");
+        }
+    }
+}
+
+function next_task(){
+    Participant.task_id += 1
+    Participant.subgoals = [];
+    if(is_completed()){
+        window.location.href = '/tasks/end';
+    }else{
+        start();
+    }
+}
+
+function is_completed(){
+    return !Boolean(Env.tasks[Participant.task_id]);
+}
+
+function post_subgoals(){
+    url = "/api/v1/subgoals";
+    const method = 'POST';
+    const body = JSON.stringify(Participant.to_dict());
+    const headers = {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
+    };
+    fetch(url, {method, headers, body})
+        .then(response => {
+            console.log(response.status);
+            if(!response.ok){
+                console.error("エラーレスポンス", response);
+            }
+        }).catch(error => {
+            console.error(error);
+        });   
 }
 
 function click_on_canvas(event){
     let rect = event.target.getBoundingClientRect();
     let x = (event.clientX - rect.left)/Env.screen_width;
     let y = 1 - (event.clientY - rect.top)/Env.screen_height;
-    Participant.sub_goals.push([x, y]);
-    draw_circle(x, y, Env.subgoal_rad, 'green');
+    let subgoal = Participant.get_subgoal(x, y, Env.subgoal_rad);
+    if(subgoal){
+        let index = Participant.subgoals.indexOf(subgoal);
+        Participant.subgoals.splice(index, 1);
+    }else{
+        if(Participant.subgoals.length < Env.tasks[Participant.task_id].n_subgoals){
+            Participant.subgoals.push(new Subgoal(x, y, Env.subgoal_rad));
+        }
+    }
+    render();
 }
-
 
 function init(){
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -116,6 +176,10 @@ function init(){
     Env.ball = new Ball(Env.start_pos_x, Env.start_pos_y, Env.ball_rad);
 }
 
+function clear_canvas(){
+    context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 function draw_circle(pos_x, pos_y, rad, color=null){
     context.beginPath();
     if(color != null){
@@ -136,15 +200,14 @@ function draw_obs(pos_xs, pos_ys){
     context.fill();
 }
 
-function init_render(){
-    return;
-}
-
 function render(){
-    context.clearRect(0, 0, Env.screen_width, Env.screen_height);
-    for(obs of Env.obstacles){
+    clear_canvas();
+    for(let obs of Env.obstacles){
         draw_obs(obs.points_x, obs.points_y);
     }
     draw_circle(Env.ball.pos_x, Env.ball.pos_y, Env.ball_rad, 'blue');
     draw_circle(Env.target_pos_x, Env.target_pos_y, Env.target_rad, 'red');
+    for(let subgoal of Participant.subgoals){
+        draw_circle(subgoal.pos_x, subgoal.pos_y, subgoal.rad, 'green');
+    }
 }

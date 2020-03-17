@@ -15,12 +15,12 @@ def render_description(request):
         if form.is_valid():
             # import pdb; pdb.set_trace()
             user = form.save()
-            response = HttpResponseRedirect('/exp/tasks/fourrooms/description')
+            response = HttpResponseRedirect('exp/tasks/fourrooms/description')
             set_cookie(response, 'user_id', user.id, 365*24*60*60)
             return response
     else:
         form = UserForm()
-    return render(request, 'exp/description.html', {"form":form})
+    return render(request, 'exp/tasks/description.html', {"form":form})
 
 def render_fourrooms_description(request):
     return render(request, 'exp/tasks/fourrooms/description.html', {})
@@ -38,15 +38,15 @@ def render_start_page(request):
             post = form.save(commit=False)
             post.created_datetime = timezone.now()
             post.save()
-            response = HttpResponseRedirect('./exp/description')
+            response = HttpResponseRedirect('/tasks/description')
             set_cookie(response, 'user_id', post.id, 365*24*60*60)
             return response
     else:
         form = UserForm()
-    return render(request, 'exp/start.html', {'form' : form})
+    return render(request, 'exp/tasks/start.html', {'form' : form})
 
 def render_end_page(request):
-    return render(request, 'exp/end.html', {})
+    return render(request, 'exp/tasks/end.html', {})
 
 def export_csv(request):
     response = HttpResponse(content_type='text/csv')
