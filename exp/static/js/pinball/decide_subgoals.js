@@ -39,6 +39,13 @@ let Env = {
     screen_height: window.innerWidth * 0.35
 }
 window.addEventListener('load', start);
+window.addEventListener('resize', ()=>{
+    Env.screen_height = window.innerWidth * 0.35;
+    Env.screen_width = window.innerWidth * 0.35;
+    canvas.screen_width = Env.screen_width;
+    canvas.screen_height = Env.screen_height;
+    start();
+});
 let nextButton = document.querySelector('#next_button');
 nextButton.addEventListener('click', click_next);
 
@@ -57,31 +64,35 @@ Participant.to_dict = () => {
     dict.task_id = Participant.task_id;
     dict.user_id = Participant.user_id;
     dict.subgoals = []
-    for(subgoal of Participant.subgoals){
-        dict.subgoals.push(subgoal.to_dict());
-    }
+    Participant.subgoals.forEach((value, index) => {
+        let subgoal_dict = value.to_dict();
+        subgoal_dict.order = index;
+        dict.subgoals.push(subgoal_dict)
+    });
     return dict;
 }
 canvas.width = Env.screen_width;
 canvas.height = Env.screen_height;
 
 
-function start(event){
+function start(){
+    let n_subgoals_span = document.querySelector("#n_subgoals");
+    n_subgoals_span.textContent = String(Env.tasks[Participant.task_id].n_subgoals);
     init();
     render();
     canvas.addEventListener("click", click_on_canvas, false);
 }
 
-function click_next(event){
+function click_next(){
     if(Participant.subgoals.length == Env.tasks[Participant.task_id].n_subgoals){
         const result = confirm('この内容でサブゴール情報を登録しますか？');
         if(result){
-            // post_subgoals();
+            post_subgoals();
             next_task();
-        }else{
-            alert("サブゴールは" + Env.tasks[Participant.task_id].n_subgoals + "箇所に設定してください．");
         }
-    }
+    }else{
+        alert("サブゴールは" + Env.tasks[Participant.task_id].n_subgoals + "箇所に設定してください．");
+    }   
 }
 
 function next_task(){
@@ -99,7 +110,7 @@ function is_completed(){
 }
 
 function post_subgoals(){
-    url = "/api/v1/subgoals";
+    url = "/api/v1/pinball/subgoals";
     const method = 'POST';
     const body = JSON.stringify(Participant.to_dict());
     const headers = {
@@ -118,9 +129,12 @@ function post_subgoals(){
 }
 
 function click_on_canvas(event){
-    let rect = event.target.getBoundingClientRect();
-    let x = (event.clientX - rect.left)/Env.screen_width;
-    let y = 1 - (event.clientY - rect.top)/Env.screen_height;
+    console.info("offset: " + event.offsetX, event.offsetY);
+    console.info("screen: " + Env.screen_width, Env.screen_width);
+    let x = (event.offsetX)/Env.screen_width;
+    let y = 1 - event.offsetY/Env.screen_height;
+    console.info("x, y: " + x, y);
+    console.info("------------------------------------");
     let subgoal = Participant.get_subgoal(x, y, Env.subgoal_rad);
     if(subgoal){
         let index = Participant.subgoals.indexOf(subgoal);
@@ -180,13 +194,20 @@ function clear_canvas(){
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function draw_circle(pos_x, pos_y, rad, color=null){
+function draw_circle(pos_x, pos_y, rad, color=null, text=null){
     context.beginPath();
     if(color != null){
         context.fillStyle = color
     }
     context.arc(Env.screen_width * pos_x, Env.screen_height * (1 - pos_y), Env.screen_height * rad, 0, Math.PI*2, false);
     context.fill();
+    if(text != null){
+        context.fillStyle = 'white'
+        context.font = "25px serif";
+        let text_size = context.measureText(text);
+        context.fillText(text, Env.screen_width * pos_x - text_size.width/2,
+                         Env.screen_height * (1 - pos_y) + 8.5)
+    }
 }
 
 function draw_obs(pos_xs, pos_ys){
@@ -207,7 +228,7 @@ function render(){
     }
     draw_circle(Env.ball.pos_x, Env.ball.pos_y, Env.ball_rad, 'blue');
     draw_circle(Env.target_pos_x, Env.target_pos_y, Env.target_rad, 'red');
-    for(let subgoal of Participant.subgoals){
-        draw_circle(subgoal.pos_x, subgoal.pos_y, subgoal.rad, 'green');
-    }
+    Participant.subgoals.forEach((value, index) => {
+        draw_circle(value.pos_x, value.pos_y, value.rad,'green', String(index+1))
+    })
 }
