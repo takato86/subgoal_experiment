@@ -116,7 +116,7 @@ function next_task(){
     Participant.subgoals = [];
     if(is_finished()){
         document.cookie = "complete_task=true";
-        window.location.href = '/tasks/end';
+        window.location.href = '/tasks/pinball/description';
     }else{
         start();
     }
