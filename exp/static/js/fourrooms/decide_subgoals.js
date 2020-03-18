@@ -64,7 +64,9 @@ canvas.addEventListener("click", click_on_canvas);
 
 function start(){
     let n_subgoals_span = document.querySelector("#n_subgoals");
+    let task_id = document.querySelector("#task_id");
     n_subgoals_span.textContent = String(Env.tasks[Participant.task_id].n_subgoals);
+    task_id.textContent = String(Participant.task_id)
     init();
     render();
 }

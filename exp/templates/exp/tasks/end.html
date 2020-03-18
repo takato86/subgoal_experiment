@@ -1,10 +1,11 @@
 {% extends 'exp/base.html' %}
-
+{% load static %}
 {% block content %}
 
 <!-- TODO ユーザー情報の入力 -->
 <div class='uk-container uk-padding'>
-    <p>実験は以上になります．
-            ご協力ありがとうございました．</p>
+    <p>お疲れ様でした。次に、アンケートをお願いします。<br>あなたのユーザー番号は<span class="uk-text-bold" id="user_id"></span>です。アンケートで入力してください。</p>
+    <p>アンケートページURL：<a href = "https://forms.gle/u41hH8GnFeTCehJm6"><url>https://forms.gle/u41hH8GnFeTCehJm6</url></a></p>
 </div>
+<script src="{% static 'js/end.js' %}"></script>
 {% endblock %}
