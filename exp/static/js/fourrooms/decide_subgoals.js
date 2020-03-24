@@ -43,11 +43,11 @@ let Env = {
 
 
 window.addEventListener("load", function(){
-    const cookies = new Map(getCookie("complete_task"));
-    // TODO
-    // if(cookies.has("complete_task")){
-    //     window.location.href = '/tasks/end';
-    // }
+    cookies = new Map(getCookie());
+    if(cookies.has("task_id")){
+        Participant.task_id = Number(cookies.get("task_id"));
+    }
+    check_status();
     start();
 });
 
@@ -113,16 +113,6 @@ function init(){
     draw_cell_with_border_and_text(s_x, s_y, 'royalblue', 'S');
 }
 
-function next_task(){
-    Participant.task_id += 1
-    Participant.subgoals = [];
-    if(is_finished()){
-        document.cookie = "complete_task=true";
-        window.location.href = '/tasks/pinball/description';
-    }else{
-        start();
-    }
-}
 
 function post_subgoals(subgoals){
     const request = new XMLHttpRequest();
@@ -252,3 +242,6 @@ function draw_text_in_cell(pos_x, pos_y, text){
     context.fillText(text, pos_x*Env.cell_width + Env.cell_width/2, pos_y*Env.cell_height + Env.cell_height/2 );
 }
 
+function is_completed(){
+    return !Boolean(Env.tasks[Participant.task_id]);
+}

@@ -1,7 +1,7 @@
 {% extends 'exp/base.html' %}
 {% load static %}
 {% block content %}
-<div><h2>タスク1-<span id="task_id"></span></h2></div>
+<div><h2>タスク2-<span id="task_id"></span></h2></div>
 <div uk-grid>
     <div class='uk-width-3-4'> 
         <!-- <button id='play_button' class='uk-button uk-button-default'>PLAY</button> -->
@@ -25,4 +25,21 @@
 </div>
 <script src="{% static 'js/fourrooms/common.js' %}"></script>
 <script src="{% static 'js/fourrooms/decide_subgoals.js' %}"></script>
+<script>
+    function next_task(){
+        Participant.task_id += 1
+        Participant.subgoals = [];
+        document.cookie = "task_id=" + Participant.task_id;
+        if(is_completed()){
+            window.location.href = '/tasks/end';
+        }else{
+            start();
+        }
+    }
+    function check_status(){
+        if(is_completed()){
+            window.location.href = '/tasks/end';
+        }
+    }
+</script>
 {% endblock %}

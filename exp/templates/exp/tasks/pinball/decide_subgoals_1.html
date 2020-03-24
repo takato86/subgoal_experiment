@@ -24,4 +24,23 @@
 </div>
 <script src="{% static 'js/pinball/common.js' %}"></script>
 <script src="{% static 'js/pinball/decide_subgoals.js' %}"></script>
+<script>
+    function next_task(){
+        Participant.task_id += 1
+        Participant.subgoals = [];
+        document.cookie = "task_id=" + Participant.task_id;
+        if(is_completed()){
+            document.cookie = "complete_task=true";
+            window.location.href = '/tasks/end';
+        }else{
+            start();
+        }
+    }
+    function check_status(){
+        if(is_completed()){
+            document.cookie = "complete_task=true";
+            window.location.href = '/tasks/end';
+        }
+    }
+</script>
 {% endblock %}

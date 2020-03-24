@@ -38,7 +38,14 @@ let Env = {
     screen_width: window.innerWidth * 0.35,
     screen_height: window.innerWidth * 0.35
 }
-window.addEventListener('load', start);
+window.addEventListener('load', ()=>{
+    cookies = new Map(getCookie());
+    if(cookies.has("task_id")){
+        Participant.task_id = Number(cookies.get("task_id"));
+    }
+    check_status();
+    start();
+});
 window.addEventListener('resize', ()=>{
     Env.screen_height = window.innerWidth * 0.35;
     Env.screen_width = window.innerWidth * 0.35;
@@ -95,16 +102,6 @@ function click_next(){
     }else{
         alert("サブゴールは" + Env.tasks[Participant.task_id].n_subgoals + "箇所に設定してください．");
     }   
-}
-
-function next_task(){
-    Participant.task_id += 1
-    Participant.subgoals = [];
-    if(is_completed()){
-        window.location.href = '/tasks/end';
-    }else{
-        start();
-    }
 }
 
 function is_completed(){
