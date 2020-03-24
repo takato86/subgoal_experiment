@@ -1,0 +1,44 @@
+{% extends 'exp/base.html' %}
+{% load static %}
+{% block content %}
+<div><h2>タスク1-<span id="task_id"></span></h2></div>
+<div uk-grid>
+    <div class="uk-width-3-4">
+        <!-- <button id='processButton' class='uk-button uk-button-default'>START</button> -->
+        <span class="uk-text-large">
+            サブゴールを<span class="uk-text-bold" id="n_subgoals"></span>箇所に順番をつけて設定してください。
+        </span>
+        <canvas id="glcanvas" width="400" height="400">
+            このブラウザは
+            <code>&lt;canvas&gt;</code> 要素をサポートしていません。
+        </canvas>
+    </div>
+    <div class='uk-width-1-4' uk-grid>
+        <div class='uk-grid-small'>
+            <button class="uk-button uk-button-secondary" id="next_button">次へ</button>
+        </div>
+        <div class='uk-grid-small uk-width-medium'>
+            <span id="log_console" class="uk-text-middle"></span>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/pinball/common.js' %}"></script>
+<script src="{% static 'js/pinball/decide_subgoals.js' %}"></script>
+<script>
+    function next_task(){
+        Participant.task_id += 1
+        Participant.subgoals = [];
+        document.cookie = "task_id=" + Participant.task_id;
+        if(is_completed()){
+            window.location.href = '/tasks/2/fourrooms/description';
+        }else{
+            start();
+        }
+    }
+    function check_status(){
+        if(is_completed()){
+            window.location.href = '/tasks/2/fourrooms/description';
+        }
+    }
+</script>
+{% endblock %}

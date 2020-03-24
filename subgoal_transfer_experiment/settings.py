@@ -23,8 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'hd@-hikc#_6bdeqgz^$@wgj%t&0a@u7%-b%gbujm)6%^xe%#5-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
+try:
+    from .local_settings import *
+except ImportError:
+    pass
 
 
 # Application definition
@@ -71,7 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'subgoal_transfer_experiment.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -86,41 +89,23 @@ WSGI_APPLICATION = 'subgoal_transfer_experiment.wsgi.application'
 # pymysql.install_as_MySQLdb()
 
 # [START db_setup]
-if os.getenv('GAE_APPLICATION', None):
-    # Running on production App Engine, so connect to Google Cloud SQL using
-    # the unix socket at /cloudsql/<your-cloudsql-connection string>
-    ALLOWED_HOSTS = ['quickstart-1561692856354.appspot.com'] #ここのホスト名を追加
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'HOST': '/cloudsql/quickstart-1561692856354:asia-east1:subgoal-experiment-instance',
-            'USER': 'tokudo',
-            'PASSWORD': '09doTAKA10',
-            'NAME': 'subgoal_experiment',
+if not DEBUG:
+    if os.getenv('GAE_APPLICATION', None):
+        # Running on production App Engine, so connect to Google Cloud SQL using
+        # the unix socket at /cloudsql/<your-cloudsql-connection string>
+        ALLOWED_HOSTS = ['quickstart-1561692856354.appspot.com'] #ここのホスト名を追加
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'HOST': '/cloudsql/quickstart-1561692856354:asia-east1:subgoal-experiment-instance',
+                'USER': 'tokudo',
+                'PASSWORD': '09doTAKA10',
+                'NAME': 'subgoal_experiment',
+            }
         }
-    }
-else:
-    # Running locally so connect to either a local MySQL instance or connect to
-    # Cloud SQL via the proxy. To start the proxy via command line:
-    #
-    #     $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
-    #
-    # See https://cloud.google.com/sql/docs/mysql-connect-proxy
-    ALLOWED_HOSTS = ['*'] #ここのホスト名を追加
-    DATABASES = {
-        'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-        # 'default': {
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'HOST': '127.0.0.1',
-        # 'PORT': '3306',
-        # 'NAME': 'subgoal_experiment',
-        # 'USER': 'tokudo',
-        # 'PASSWORD': '09doTAKA10',
-        # }
-    }
+    else:
+        import django_heroku
+        django_heroku.settings(locals())
 
 
 
@@ -162,4 +147,3 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-

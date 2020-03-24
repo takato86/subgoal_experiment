@@ -12,120 +12,41 @@ def validate_acceptance(value):
 class User(models.Model):
     # mail = models.EmailField(verbose_name="メールアドレス")
     name = models.CharField(verbose_name='氏名', max_length=127)
-    age = models.PositiveSmallIntegerField(verbose_name='年齢', validators=[validators.MinValueValidator(1, message='年齢は1以上で入力してください',), validators.MaxValueValidator(120)], default=20)
+    min_validator = validators.MinValueValidator(1, message='年齢は1以上で入力してください',)
+    max_validator = validators.MaxValueValidator(120)
+    age = models.PositiveSmallIntegerField(verbose_name='年齢',
+                                           validators=[min_validator,
+                                                       max_validator],
+                                           default=20)
     SEX_CHOICES = ((0, '男性'), (1, '女性'), (2, '答えたくない'))
-    sex = models.IntegerField(verbose_name='性別', choices = SEX_CHOICES, default=0)
+    sex = models.IntegerField(verbose_name='性別', choices=SEX_CHOICES,
+                              default=0)
     ACCEPTANCE_CHOICES = ((0, '同意しません'), (1, '同意します'))
-    is_acceptance = models.IntegerField(verbose_name='同意', choices=ACCEPTANCE_CHOICES, default=0, validators=[validate_acceptance])
+    is_acceptance = models.IntegerField(verbose_name='同意',
+                                        choices=ACCEPTANCE_CHOICES, default=0,
+                                        validators=[validate_acceptance])
     created_datetime = models.DateTimeField(default=timezone.now)
 
-class Task(models.Model):
-    title = models.CharField(max_length=127)
-    description = models.TextField()
-    registered_date = models.DateTimeField(default=timezone.now)
-    modified_date = models.DateTimeField(blank=True, null=True)
-    removed_date = models.DateTimeField(blank=True, null=True)
 
-    def register(self):
-        self.registered_date = timezone.now()
-        self.save()
-    
-    def remove(self):
-        self.removed_date = timezone.now()
-        self.save()
-
-    def __str__(self):
-        return self.title
-
-
-class Play(models.Model):
-    # task = models.ForeignKey('Task', on_delete=models.CASCADE)
+class FourroomsSubgoal(models.Model):
     task = models.IntegerField(null=False, blank=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
-    n_steps = models.IntegerField(null=True, blank=True)
-    goal = models.IntegerField()
-    is_goal = models.BooleanField()
-    task_type = models.CharField(max_length=100)
-    start_datetime = models.DateTimeField(default=timezone.now)
-    end_datetime = models.DateTimeField(blank=True, null=True)
-
-    def start(self, task_id:int , user_id:int , goal:int , task_type: str="exp_play"):
-        user = User.objects.get(id=user_id)
-        self.task = task_id
-        self.user = user
-        self.goal = goal
-        self.taskあtype = task_type
-        self.is_goal = False
-        self.n_steps = 0
-        self.start_datetime = timezone.now()
-        self.save()
-        return self.id
-
-    def finish(self, n_steps, is_goal):
-        self.n_steps = n_steps
-        self.is_goal = is_goal
-        self.end_datetime = timezone.now()
-        self.save()
-
-
-class Trajectory(models.Model):
-    task = models.IntegerField(null=False, blank=False)
-    n_steps = models.IntegerField(null=True, blank=True)
-    goal = models.IntegerField()
-    task_type = models.CharField(max_length=100)
-    registered_datetime = models.DateTimeField(default=timezone.now)
-
-    def register(self):
-        self.registered_datetime = timezone.now()
-        self.save()
-
-
-class Experience(models.Model):
-    trajectory = models.ForeignKey('Trajectory', on_delete=models.CASCADE)
     order = models.IntegerField()
-    state = models.IntegerField()
-    action = models.IntegerField()
-    next_state = models.IntegerField()
-
-    def to_dict(self):
-        return {"id": self.id, "order":self.order, "state1": self.state, "actual_action": self.action, "next_state1": self.next_state}
-
-    def to_list(self):
-        return [self.id, self.trajectory.id, self.order, self.state, self.action, self.next_state]
-
-class Action(models.Model):
-    play = models.ForeignKey('Play', on_delete=models.CASCADE)
-    state1 = models.FloatField()
-    state2 = models.FloatField(null=True, blank=True)
-    state3 = models.FloatField(null=True, blank=True)
-    state4 = models.FloatField(null=True, blank=True)
-    intent_action = models.IntegerField()
-    actual_action = models.IntegerField()
-    next_state1 = models.FloatField()
-    next_state2 = models.FloatField(null=True, blank=True)
-    next_state3 = models.FloatField(null=True, blank=True)
-    next_state4 = models.FloatField(null=True, blank=True)
-    reward = models.IntegerField()
-    timestamp = models.DateTimeField(default=timezone.now)
-
-    def to_dict(self):
-        return {"id": self.id, "state1":self.state1, "state2":self.state2,"state3":self.state3,"state4":self.state4,"intent_action":self.intent_action, "actual_action":self.actual_action}
-
-class Evaluation(models.Model):
-    play = models.ForeignKey('Play', on_delete=models.CASCADE)
-    action = models.ForeignKey('Action', on_delete=models.CASCADE)
-    evaluation = models.IntegerField()
-    timestamp = models.DateTimeField(default=timezone.now)
-    
-    def to_list(self):
-        return [self.id, self.play.id, self.play.user.id, self.play.task, self.action.state1, self.action.state2, self.action.state3, self.action.state4, self.action.intent_action, self.action.actual_action, self.action.next_state1, self.action.next_state2, self.action.next_state3, self.action.next_state4, self.timestamp]
-
-
-class SubGoal(models.Model):
-    task = models.IntegerField(null=False, blank=False)
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
     state = models.FloatField()
     timestamp = models.DateTimeField(default=timezone.now)
+
     def to_list(self):
         return [self.id, self.task, self.user.id, self.state]
 
+
+class PinballSubgoal(models.Model):
+    task = models.IntegerField(null=False, blank=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    order = models.IntegerField()
+    x = models.FloatField()
+    y = models.FloatField()
+    rad = models.FloatField()
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    def to_list(self):
+        return [self.id, self.task, self.user.id, self.x, self.y, self.rad]

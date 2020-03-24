@@ -1,3 +1,54 @@
+class Subgoal{
+    constructor(pos_x, pos_y, rad){
+        this.pos_x = pos_x;
+        this.pos_y = pos_y;
+        this.rad = rad;
+    }
+    is_in(pos_x, pos_y, rad){
+        let distance = ((pos_x - this.pos_x)**2 + (pos_y - this.pos_y)**2) ** 0.5;
+        return (distance < this.rad);
+    }
+    to_dict(){
+        return {"x": this.pos_x, "y": this.pos_y, "rad": this.rad};
+    }
+}
+
+
+class Ball{
+    constructor(pos_x, pos_y, rad){ 
+        this.DRAG = 0.995;
+        this.pos_x = pos_x;
+        this.pos_y = pos_y;
+        this.rad = rad;
+        this.xdot = 0;
+        this.ydot = 0;
+    }
+    add_impulse([delta_xdot, delta_ydot]){
+        this.xdot += delta_xdot / 5;
+        this.ydot += delta_ydot / 5;
+        this.xdot = this.clip(this.xdot);
+        this.ydot = this.clip(this.ydot);
+    }
+    add_drag(){
+        this.xdot = this.xdot * this.DRAG;
+        this.ydot = this.ydot * this.DRAG;
+    }
+
+    step(){
+        this.pos_x = this.pos_x + this.xdot * this.rad / 20;
+        this.pos_y = this.pos_y + this.ydot * this.rad / 20;
+    }
+    clip(val, low=-2, high=2){
+        if(val > high){
+            val = high;
+        }
+        if(val < low){
+            val = low;
+        }
+        return val;
+    }
+}
+
 class PinballObstacle{
     constructor(points_x, points_y){
         this.points_x = points_x;
@@ -136,4 +187,55 @@ class PinballObstacle{
             return false;
         }
     }
+}
+
+function subVecs(a, b){
+    if(a.length != b.length){
+        throw "Vector length must be equal."
+    }
+    let result = [];
+    for(let i=0; i < a.length; i++){
+        result.push(a[i] - b[i]);
+    }
+    return result;
+}
+function dot(a,b){
+    if(a.length != b.length){
+        throw "Vector length must be equal."
+    }
+    let result = 0;
+    for(let i = 0; i < a.length; i++){
+        result += a[i] * b[i];
+    }
+    return result;
+}
+function divVecs(a,b){
+    if(a.length != b.length){
+        throw "Vector length must be equal."
+    }
+    let result = [];
+    for(let i=0; i < a.length; i++){
+        result.push(a[i] / b[i]);
+    }
+    return result;
+}
+function addVecs(a, b){
+    if(a.length != b.length){
+        throw "Vector length must be equal."
+    }
+    let result = [];
+    for(let i=0; i < a.length; i++){
+        result.push(a[i] + b[i]);
+    }
+    return result;
+}
+function mulVecs(a, b){
+    if(a.length != b.length){
+        throw "Vector length must be equal."
+    }
+    let result = [];
+    for(let i=0; i < a.length; i++){
+        result.push(a[i] * b[i]);
+    }
+    return result;
 }

@@ -2,8 +2,7 @@
 {% load static %}
 {% block content %}
 {% load widget_tweaks %}
-<span id="task" data-taskid=1 data-tasktype="reha"></span>
-<script src="{% static 'js/common/Start.js'%}"></script>
+<!-- <script src="{% static 'js/common/Start.js'%}"></script> -->
 <h2><span class="uk-text-background"></span></h2>
 <div class="uk-section uk-section-default">
     {% if form.is_acceptance.errors %}
@@ -91,9 +90,15 @@
             </div>
             <div class='uk-margin'>
                 <input type="submit" class='uk-button uk-button-default' value="送信">
-                    <!-- <a class='uk-button uk-button-default' href="{% url 'play_fourroom_description' %}">次へ</a> -->
             </div>
         </form>
     </div>
 </div>
+<script>
+    window.addEventListener("load", function(){
+    if(Participant.user_id != -1){
+         window.location.href = '/tasks/1/fourrooms/description';
+    } 
+ });
+</script>
 {% endblock %}

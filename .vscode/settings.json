@@ -1,5 +1,6 @@
 {
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
-    "python.pythonPath": "/Users/kerneltyu/anaconda3/envs/web-django/bin/python"
+    "python.pythonPath": "/home/tokudo/miniconda3/envs/research/bin/python",
+    "python.linting.pylintEnabled": false
 }

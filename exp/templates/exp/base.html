@@ -11,10 +11,11 @@
         <script src="{% static 'js/uikit/uikit.min.js' %}"></script>
         <script src="{% static 'js/uikit/uikit-icons.min.js' %}"></script>
     </head>
-    <script src="{% static 'js/common/Global.js'%}"></script>
+    <script src="{% static 'js/common.js'%}"></script>
+    <!-- <script src="{% static 'js/common/Global.js'%}"></script> -->
     <body>
         <header class='uk-background-primary uk-light uk-padding'>
-            <h1>Subgoal Transfer Experiments</h1>
+            <h1>サブゴール取得実験</h1>
         </header>
         <main>
             <div class="container">
@@ -26,8 +27,11 @@
                                 <li>実験説明・同意事項</li> 
                                 <!-- <li><span class="uk-text-background">迷路タスク</span></li> -->
                                 <!-- class="uk-active"  -->
-                                <li>タスク説明</li>
-                                <li>タスク</li>
+                                <li>タスク１説明</li>
+                                <li>タスク１</li>
+                                <li>タスク２説明</li>
+                                <li>タスク２</li>
+                                <li>アンケート</li>
                             </ul>
                         </div>
                     {% endblock %}
@@ -38,9 +42,9 @@
                 </div>    
             </div>
         </main>
-        <footer id='foot' class='uk-background-secondary uk-light uk-padding'>
+        <footer class='uk-background-secondary uk-light uk-padding'>
             <div>Ymd-lab Takato Okudo</div>
         </footer>
     </body>
-    <script src="{% static 'js/common/Utils.js'%}"></script>
+    <!-- <script src="{% static 'js/common/Utils.js'%}"></script> -->
 </html>
