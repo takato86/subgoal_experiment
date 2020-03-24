@@ -1,0 +1,1 @@
+web: gunicorn subgoal_transfer_experiment.wsgi --log-file -
