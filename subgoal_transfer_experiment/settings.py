@@ -16,29 +16,19 @@ import dj_database_url
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1',
+#                  'subgoal-transfer-experiment.herokuapp.com']
+SECRET_KEY = os.environ['SECRET_KEY']
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.1/topics/i18n/
+ALLOWED_HOSTS = []
 
-LANGUAGE_CODE = 'ja'
-TIME_ZONE = 'Asia/Tokyo'
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
-
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1',
-                 'subgoal-transfer-experiment.herokuapp.com']
-SECRET_KEY = os.environ['SECRET_KEY']
-DATABASES = {
-                'default': dj_database_url.config(conn_max_age=600)
-            }
-
-try:
-    from .local_settings import *
-except ImportError:
-    pass
+# try:
+#     from .local_settings import *
+# except ImportError:
+#     pass
 
 # Application definition
 
@@ -52,12 +42,10 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'exp',
     'api',
-    'whitenoise.runserver_nostatic'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -66,8 +54,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 ROOT_URLCONF = 'subgoal_transfer_experiment.urls'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -85,6 +73,22 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'subgoal_transfer_experiment.wsgi.application'
+
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+# import pymysql  # noqa: 402
+# pymysql.install_as_MySQLdb()
+
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -104,31 +108,25 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Internationalization
+# https://docs.djangoproject.com/en/2.1/topics/i18n/
+
+LANGUAGE_CODE = 'ja'
+TIME_ZONE = 'Asia/Tokyo'
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'exp', 'static')
-]
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-# import pymysql  # noqa: 402
-# pymysql.install_as_MySQLdb()
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = "/static/"
 
 # [START db_setup]
 
-if not DEBUG:
+# if not DEBUG:
     # if os.getenv('GAE_APPLICATION', None):
     #     # Running on production App Engine, so connect to Google Cloud SQL using
     #     # the unix socket at /cloudsql/<your-cloudsql-connection string>
@@ -144,7 +142,4 @@ if not DEBUG:
     #     }
     # else:
 
-    import django_heroku
-    django_heroku.settings(locals())
-
-
+django_heroku.settings(locals())
