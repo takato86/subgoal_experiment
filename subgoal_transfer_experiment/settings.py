@@ -19,8 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'hd@-hikc#_6bdeqgz^$@wgj%t&0a@u7%-b%gbujm)6%^xe%#5-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -53,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'subgoal_transfer_experiment.urls'
@@ -104,6 +103,8 @@ if not DEBUG:
     #         }
     #     }
     # else:
+    SECRET_KEY = os.environ['SECRET_KEY']
+    ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
     import django_heroku
     django_heroku.settings(locals())
 
