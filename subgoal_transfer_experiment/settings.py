@@ -29,6 +29,49 @@ try:
 except ImportError:
     pass
 
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+# import pymysql  # noqa: 402
+# pymysql.install_as_MySQLdb()
+
+# [START db_setup]
+
+
+if not DEBUG:
+    # if os.getenv('GAE_APPLICATION', None):
+    #     # Running on production App Engine, so connect to Google Cloud SQL using
+    #     # the unix socket at /cloudsql/<your-cloudsql-connection string>
+    #     ALLOWED_HOSTS = ['quickstart-1561692856354.appspot.com'] #ここのホスト名を追加
+    #     DATABASES = {
+    #         'default': {
+    #             'ENGINE': 'django.db.backends.mysql',
+    #             'HOST': '/cloudsql/quickstart-1561692856354:asia-east1:subgoal-experiment-instance',
+    #             'USER': 'tokudo',
+    #             'PASSWORD': '09doTAKA10',
+    #             'NAME': 'subgoal_experiment',
+    #         }
+    #     }
+    # else:
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600)
+    }
+
+    SECRET_KEY = os.environ['SECRET_KEY']
+    ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
+
+    import django_heroku
+    django_heroku.settings(locals())
+
+
+
 
 # Application definition
 
@@ -75,49 +118,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'subgoal_transfer_experiment.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-# import pymysql  # noqa: 402
-# pymysql.install_as_MySQLdb()
-
-# [START db_setup]
-
-
-if not DEBUG:
-    # if os.getenv('GAE_APPLICATION', None):
-    #     # Running on production App Engine, so connect to Google Cloud SQL using
-    #     # the unix socket at /cloudsql/<your-cloudsql-connection string>
-    #     ALLOWED_HOSTS = ['quickstart-1561692856354.appspot.com'] #ここのホスト名を追加
-    #     DATABASES = {
-    #         'default': {
-    #             'ENGINE': 'django.db.backends.mysql',
-    #             'HOST': '/cloudsql/quickstart-1561692856354:asia-east1:subgoal-experiment-instance',
-    #             'USER': 'tokudo',
-    #             'PASSWORD': '09doTAKA10',
-    #             'NAME': 'subgoal_experiment',
-    #         }
-    #     }
-    # else:
-    DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600)
-    }
-
-    SECRET_KEY = os.environ['SECRET_KEY']
-    ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
-
-    import django_heroku
-    django_heroku.settings(locals())
-
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -156,3 +156,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static')
+)
