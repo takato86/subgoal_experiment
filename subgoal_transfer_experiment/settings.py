@@ -90,22 +90,22 @@ WSGI_APPLICATION = 'subgoal_transfer_experiment.wsgi.application'
 
 # [START db_setup]
 if not DEBUG:
-    if os.getenv('GAE_APPLICATION', None):
-        # Running on production App Engine, so connect to Google Cloud SQL using
-        # the unix socket at /cloudsql/<your-cloudsql-connection string>
-        ALLOWED_HOSTS = ['quickstart-1561692856354.appspot.com'] #ここのホスト名を追加
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.mysql',
-                'HOST': '/cloudsql/quickstart-1561692856354:asia-east1:subgoal-experiment-instance',
-                'USER': 'tokudo',
-                'PASSWORD': '09doTAKA10',
-                'NAME': 'subgoal_experiment',
-            }
-        }
-    else:
-        import django_heroku
-        django_heroku.settings(locals())
+    # if os.getenv('GAE_APPLICATION', None):
+    #     # Running on production App Engine, so connect to Google Cloud SQL using
+    #     # the unix socket at /cloudsql/<your-cloudsql-connection string>
+    #     ALLOWED_HOSTS = ['quickstart-1561692856354.appspot.com'] #ここのホスト名を追加
+    #     DATABASES = {
+    #         'default': {
+    #             'ENGINE': 'django.db.backends.mysql',
+    #             'HOST': '/cloudsql/quickstart-1561692856354:asia-east1:subgoal-experiment-instance',
+    #             'USER': 'tokudo',
+    #             'PASSWORD': '09doTAKA10',
+    #             'NAME': 'subgoal_experiment',
+    #         }
+    #     }
+    # else:
+    import django_heroku
+    django_heroku.settings(locals())
 
 
 
