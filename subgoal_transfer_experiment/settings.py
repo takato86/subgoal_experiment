@@ -11,24 +11,24 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-import dj_database_url
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
-
+# ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1',
+#                  'subgoal-transfer-experiment.herokuapp.com']
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-try:
-    from .local_settings import *
-except ImportError:
-    pass
+ALLOWED_HOSTS = []
 
+# try:
+#     from .local_settings import *
+# except ImportError:
+#     pass
 
 # Application definition
 
@@ -52,7 +52,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'subgoal_transfer_experiment.urls'
@@ -78,43 +77,16 @@ WSGI_APPLICATION = 'subgoal_transfer_experiment.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 # import pymysql  # noqa: 402
 # pymysql.install_as_MySQLdb()
 
-# [START db_setup]
-
-
-if not DEBUG:
-    # if os.getenv('GAE_APPLICATION', None):
-    #     # Running on production App Engine, so connect to Google Cloud SQL using
-    #     # the unix socket at /cloudsql/<your-cloudsql-connection string>
-    #     ALLOWED_HOSTS = ['quickstart-1561692856354.appspot.com'] #ここのホスト名を追加
-    #     DATABASES = {
-    #         'default': {
-    #             'ENGINE': 'django.db.backends.mysql',
-    #             'HOST': '/cloudsql/quickstart-1561692856354:asia-east1:subgoal-experiment-instance',
-    #             'USER': 'tokudo',
-    #             'PASSWORD': '09doTAKA10',
-    #             'NAME': 'subgoal_experiment',
-    #         }
-    #     }
-    # else:
-    DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600)
-    }
-
-    SECRET_KEY = os.environ['SECRET_KEY']
-    ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
-
-    import django_heroku
-    django_heroku.settings(locals())
 
 
 
@@ -136,23 +108,38 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
 LANGUAGE_CODE = 'ja'
-
 TIME_ZONE = 'Asia/Tokyo'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = "/static/"
+
+# [START db_setup]
+
+# if not DEBUG:
+    # if os.getenv('GAE_APPLICATION', None):
+    #     # Running on production App Engine, so connect to Google Cloud SQL using
+    #     # the unix socket at /cloudsql/<your-cloudsql-connection string>
+    #     ALLOWED_HOSTS = ['quickstart-1561692856354.appspot.com'] #ここのホスト名を追加
+    #     DATABASES = {
+    #         'default': {
+    #             'ENGINE': 'django.db.backends.mysql',
+    #             'HOST': '/cloudsql/quickstart-1561692856354:asia-east1:subgoal-experiment-instance',
+    #             'USER': 'tokudo',
+    #             'PASSWORD': '09doTAKA10',
+    #             'NAME': 'subgoal_experiment',
+    #         }
+    #     }
+    # else:
+
+django_heroku.settings(locals())
