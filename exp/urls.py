@@ -31,4 +31,8 @@ urlpatterns = [
           name='export_fourrooms_csv'),
      path('tasks/pinball/export_csv', views.export_pinball_csv,
           name='export_pinball_csv'),
+     path('tasks/fourrooms/visualize', views.visualize_fourrooms,
+          name='visualize_fourrooms'),
+     path('tasks/pinball/visualize', views.visualize_pinball,
+          name='visualize_pinball'),
 ]

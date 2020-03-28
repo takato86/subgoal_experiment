@@ -36,7 +36,7 @@ class FourroomsSubgoal(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
 
     def to_list(self):
-        return [self.id, self.task, self.user.id, self.state]
+        return [self.id, self.task, self.user.id, self.order, self.state]
 
 
 class PinballSubgoal(models.Model):
@@ -49,4 +49,4 @@ class PinballSubgoal(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
 
     def to_list(self):
-        return [self.id, self.task, self.user.id, self.x, self.y, self.rad]
+        return [self.id, self.task, self.user.id, self.order, self.x, self.y, self.rad]

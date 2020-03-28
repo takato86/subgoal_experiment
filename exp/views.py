@@ -68,7 +68,7 @@ def export_fourrooms_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="fourrooms_subgoals.csv"'
     writer = csv.writer(response)
-    csv_header = ["id", "task_id", "user_id", "state"]
+    csv_header = ["id", "task_id", "user_id", "order", "state"]
     writer.writerow(csv_header)
     for subgoal in FourroomsSubgoal.objects.all():
         writer.writerow(subgoal.to_list())
@@ -79,8 +79,16 @@ def export_pinball_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="pinball_subgoals.csv"'
     writer = csv.writer(response)
-    csv_header = ["id", "task_id", "user_id", "x", "y", "rad"]
+    csv_header = ["id", "task_id", "user_id","order", "x", "y", "rad"]
     writer.writerow(csv_header)
     for subgoal in PinballSubgoal.objects.all():
         writer.writerow(subgoal.to_list())
     return response
+
+
+def visualize_fourrooms(request):
+    return render(request, 'exp/tasks/fourrooms/visualize.html', {})
+
+
+def visualize_pinball(request):
+    return render(request, 'exp/tasks/pinball/visualize.html', {})
