@@ -18,7 +18,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1',
 #                  'subgoal-transfer-experiment.herokuapp.com']
-SECRET_KEY = os.environ['SECRET_KEY']
+try:
+    from .local_settings import *
+except ImportError:
+    SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
