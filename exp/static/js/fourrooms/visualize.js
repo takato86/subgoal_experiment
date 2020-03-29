@@ -68,6 +68,6 @@ function render_subgoals(subg_counter){
     for(key in subg_counter){
         state = parseInt(key);
         [cell_y, cell_x] = tocell(state);
-        draw_cell_with_border_and_text(cell_x, cell_y, "orange", String(subg_counter[key]));
+        draw_cell_with_border_and_text(cell_x, cell_y, "green", String(subg_counter[key]), 0.4);
     }
 }

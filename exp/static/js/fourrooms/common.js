@@ -74,7 +74,7 @@ function init(){
     Env.cell_width = Math.floor(window.innerHeight / 1.5 / Env.width);
     [s_y, s_x] = tocell(task.start);
     [g_y, g_x] = tocell(task.goal);
-    draw_cell_with_border_and_text(g_x, g_y, 'darkorange', 'G');
+    draw_cell_with_border_and_text(g_x, g_y, 'red', 'G');
     draw_cell_with_border_and_text(s_x, s_y, 'royalblue', 'S');
 }
 
@@ -98,7 +98,7 @@ function render(){
     }
     [s_y, s_x] = tocell(Env.tasks[Participant.task_id].start);
     [g_y, g_x] = tocell(Env.tasks[Participant.task_id].goal);
-    draw_cell_with_border_and_text(g_x, g_y, 'darkorange', 'G');
+    draw_cell_with_border_and_text(g_x, g_y, 'red', 'G');
     draw_cell_with_border_and_text(s_x, s_y, 'royalblue', 'S');
     Participant.subgoals.forEach((value, index) => {
         [cell_y, cell_x] = tocell(value);
@@ -122,25 +122,27 @@ function draw_cell(pos_x, pos_y, color){
     context.fillRect(pos_x * Env.cell_width, pos_y * Env.cell_height, Env.cell_width, Env.cell_height);
 }
 
-function draw_cell_with_border(pos_x, pos_y, color){
+function draw_cell_with_border(pos_x, pos_y, color, alpha=1.0){
     context.clearRect(pos_x * Env.cell_width, pos_y * Env.cell_height, Env.cell_width, Env.cell_height);
     context.fillStyle = color;
+    context.globalAlpha = alpha;
     context.fillRect(pos_x * Env.cell_width, pos_y * Env.cell_height, Env.cell_width, Env.cell_height);
     context.lineWidth = 1.0;
     context.strokeStyle = 'black';
     context.strokeRect(pos_x * Env.cell_width, pos_y * Env.cell_height, Env.cell_width, Env.cell_height);
 }
 
-function draw_cell_with_border_and_text(pos_x, pos_y, color, text){
-    draw_cell_with_border(pos_x, pos_y, color);
+function draw_cell_with_border_and_text(pos_x, pos_y, color, text, alpha=1.0){
+    draw_cell_with_border(pos_x, pos_y, color, alpha);
     draw_text_in_cell(pos_x, pos_y, text);
 }
 
-function draw_text_in_cell(pos_x, pos_y, text){
+function draw_text_in_cell(pos_x, pos_y, text, alpha=1.0){
     context.fillStyle='black';
     context.font = '30px Arial';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
+    context.globalAlpha = alpha;
     context.fillText(text, pos_x*Env.cell_width + Env.cell_width/2, pos_y*Env.cell_height + Env.cell_height/2 );
 }
 
